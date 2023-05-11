@@ -18,8 +18,6 @@ const DocumentForm = (props) => {
     props.handleFileChange(e);
   };
 
-  console.log(formValues);
-
   return (
     <Box sx={{ px: 8 }}>
       <Typography variant="h6" gutterBottom>
@@ -79,7 +77,7 @@ const DocumentForm = (props) => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12}>
-          <TextField required id="displayName" name="displayName" label="Name" fullWidth value={formValues.displayName} onChange={handleChange} variant="standard" />
+          <TextField required id="displayName" name="name.displayName" label="Name" fullWidth value={formValues.name.displayName} onChange={handleChange} variant="standard" />
         </Grid>
         <Grid item xs={12} sm={6}>
           {/* //create as num, no dash */}

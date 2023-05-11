@@ -28,10 +28,12 @@ passport.use(
         const newUser = await new User({
           googleId: profile.id,
           email: profile.emails[0].value,
-          firstName: profile.name.givenName,
-          middleName: profile.name.middleName,
-          lastName: profile.name.familyName,
-          displayName: profile.displayName,
+          name: {
+            firstName: profile.name.givenName,
+            middleName: profile.name.middleName,
+            lastName: profile.name.familyName,
+            displayName: profile.displayName,
+          },
           profilePhoto: profile.photos[0].value,
           student: null,
           // encryptedJson: encryptedJson

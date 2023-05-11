@@ -11,10 +11,12 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
-    firstName: String,
-    middleName: String,
-    lastName: String,
-    displayName: String,
+    name: {
+      firstName: String,
+      middleName: String,
+      lastName: String,
+      displayName: String,
+    },
     profilePhoto: String,
     active: Boolean,
     college: String,
@@ -23,14 +25,25 @@ const UserSchema = new Schema(
       default: null,
     },
     student: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      type: {
+        studNum: String,
+        classification: String,
+        saisNum: String,
+        address: String,
+        mobileNum: String,
+        adviser: String,
+        degProg: String,
+        contactName: String,
+        contactPNum: String,
+        contactAdd: String,
+        idPic: String,
+      },
       default: null,
     },
     lastVisited: { type: Date, default: new Date() },
   },
   {
-    timestamps: true,
+    timestamps: { type: Date, default: new Date() },
   }
 );
 

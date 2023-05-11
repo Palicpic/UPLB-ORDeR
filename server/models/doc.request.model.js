@@ -22,7 +22,7 @@ const DocumentRequestSchema = new Schema(
     },
   },
   {
-    timestamps: true,
+    timestamps: { type: Date, default: Date.now() },
   }
 );
 
