@@ -19,7 +19,7 @@ const FormModal = (props) => {
     e.preventDefault();
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/doc-request/new`, formValues)
+      .post(`${process.env.REACT_APP_API_URL}/document-request/new`, formValues)
       .then((response) => {
         console.log("Data saved:", response.data);
       })

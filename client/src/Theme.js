@@ -14,6 +14,7 @@ const Theme = createTheme({
   typography: {
     fontFamily: "Poppins",
   },
+  overrides: {},
 });
 
 export default Theme;

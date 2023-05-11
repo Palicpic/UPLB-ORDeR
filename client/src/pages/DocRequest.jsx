@@ -1,4 +1,4 @@
-import { Container, Grid, Button, Paper, Modal } from "@mui/material/";
+import { Grid, Button, Modal } from "@mui/material/";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
 import axios from "axios";
@@ -67,7 +67,7 @@ const DocRequest = (props) => {
   const getDocRequestList = async () => {
     try {
       const userId = user._id;
-      const docListUrl = `${process.env.REACT_APP_API_URL}/doc-request/${userId}`;
+      const docListUrl = `${process.env.REACT_APP_API_URL}/document-request/${userId}`;
       const { data } = await axios.get(docListUrl, { withCredentials: true });
       setDocRequest(data);
     } catch (err) {
@@ -98,38 +98,23 @@ const DocRequest = (props) => {
   };
 
   return (
-    <Container maxWidth="xl">
-      <Paper
-        elevation={5}
-        sx={{
-          bgcolor: "white",
-          height: "93vh",
-          m: "auto",
-          borderRadius: "50px",
-          boxShadow: "1px 1px 1px 0px #963c55, 1px 1px 1px 1px #aa4360",
-          overflow: "auto",
-          justifyContent: "center",
-        }}
-      >
-        <Grid container fullWidth>
-          <Grid item xs={12} md={7} xl={8}>
-            {/* Document Request */}
-          </Grid>
-          <Grid item xs={12} md={5} xl={4} sx={{ py: 4, display: "flex", alignItems: "center" }}>
-            <Button startIcon={<AddIcon />} fullWidth variant="contained" size="large" onClick={handleOpen} sx={{ mx: 5 }}>
-              New Document Request
-            </Button>
-            <Modal open={open} onClose={handleClose}>
-              <FormModal user={user} docs={docs} colleges={colleges} formValues={formValues} onClose={handleClose} handleChange={handleChange} handleFileChange={handleFileChange} />
-            </Modal>
-          </Grid>
-          {/* <Grid></Grid> */}
-          <Grid item xs={12} sx={{ display: "flex", alignItems: "center" }}>
-            <DocRequestTable docRequest={docRequest} />
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+    <Grid container fullWidth>
+      <Grid item xs={12} md={7} xl={8}>
+        {/* Document Request */}
+      </Grid>
+      <Grid item xs={12} md={5} xl={4} sx={{ py: 4, display: "flex", alignItems: "center" }}>
+        <Button startIcon={<AddIcon />} fullWidth variant="contained" size="large" onClick={handleOpen} sx={{ mx: 5 }}>
+          New Document Request
+        </Button>
+        <Modal open={open} onClose={handleClose}>
+          <FormModal user={user} docs={docs} colleges={colleges} formValues={formValues} onClose={handleClose} handleChange={handleChange} handleFileChange={handleFileChange} />
+        </Modal>
+      </Grid>
+      {/* <Grid></Grid> */}
+      <Grid item xs={12} sx={{ display: "flex", alignItems: "center" }}>
+        <DocRequestTable docRequest={docRequest} />
+      </Grid>
+    </Grid>
   );
 };
 

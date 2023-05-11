@@ -4,15 +4,16 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 
 const columns = [
   { id: "dateRequested", label: "Date Requested", width: "20%" },
-  { id: "documentName", label: "Document Name", width: "35%" },
-  { id: "status", label: "Status", filterable: true, width: "25%" },
-  { id: "viewFullDetails", label: "View Full Details", width: "20%" },
+  { id: "recipient", label: "Recipient", width: "20%" },
+  { id: "subject", label: "Subject", width: "30%" },
+  { id: "status", label: "Status", filterable: true, width: "15%" },
+  { id: "viewFullDetails", label: "View Full Details", width: "15%" },
 ];
 
 const statusOptions = ["All", "Approved", "Pending", "Denied"];
 
-const DocRequestTable = (props) => {
-  const rows = props.docRequest;
+const SigRequestTable = (props) => {
+  const rows = props.signRequest;
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -76,7 +77,8 @@ const DocRequestTable = (props) => {
           {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
             <TableRow key={row.id}>
               <TableCell align={"center"}>{row.createdAt.toString().replace(/T/, " ").replace(/\..+/, "")}</TableCell>
-              <TableCell align={"center"}>{row.documentName}</TableCell>
+              <TableCell align={"center"}>{row.recipient.displayName}</TableCell>
+              <TableCell align={"center"}>{row.subject}</TableCell>
               <TableCell align={"center"}>{row.status}</TableCell>
               <TableCell align={"center"}>
                 <Button variant="outlined" color="primary">
@@ -92,4 +94,4 @@ const DocRequestTable = (props) => {
   );
 };
 
-export default DocRequestTable;
+export default SigRequestTable;

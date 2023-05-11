@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Container, Paper } from "@mui/material/";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -16,9 +17,6 @@ const App = () => {
       const url = `${process.env.REACT_APP_API_URL}/auth/login/success`;
       const { data } = await axios.get(url, { withCredentials: true });
       setUser(data.user);
-
-      // await getStudentInfo();
-      // if (user.student) getStudentInfo();
     } catch (err) {
       console.log(err);
     }
@@ -32,27 +30,42 @@ const App = () => {
     <div className="App">
       <CssBaseline />
       <Navbar user={user} />
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={user ? <Navigate to="/doc-request" /> : <Homepage />}
-          // element={<Homepage/>}
-        />
-        <Route exact path="doc-request" element={user ? <DocRequest user={user} /> : <Navigate to="/" />}>
-          {/* <Route
+      <Container maxWidth="xl">
+        <Paper
+          elevation={5}
+          sx={{
+            bgcolor: "white",
+            height: "93vh",
+            m: "auto",
+            borderRadius: "50px",
+            boxShadow: "1px 1px 1px 0px #963c55, 1px 1px 1px 1px #aa4360",
+            overflow: "auto",
+            justifyContent: "center",
+          }}
+        >
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={user ? <Navigate to="/doc-request" /> : <Homepage />}
+              // element={<Homepage/>}
+            />
+            <Route exact path="doc-request" element={user ? <DocRequest user={user} /> : <Navigate to="/" />}>
+              {/* <Route
           path="form"
           element={user? <DocRequestForm user={user}/> : <Navigate to="/" /> }
           /> */}
-        </Route>
-        <Route
-          exact
-          path="/signature-request"
-          // element={user? <DocRequest user={user}/>  : <Navigate to="/" />
-          element={user ? <SigRequest user={user} /> : <Navigate to="/" />}
-        />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+            </Route>
+            <Route
+              exact
+              path="/signature-request"
+              // element={user? <DocRequest user={user}/>  : <Navigate to="/" />
+              element={user ? <SigRequest user={user} /> : <Navigate to="/" />}
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Paper>
+      </Container>
     </div>
   );
 };
