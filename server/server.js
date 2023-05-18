@@ -12,6 +12,9 @@ const authRoute = require("./routes/auth.route");
 const docNameRoute = require("./routes/document.route");
 const collegeRoute = require("./routes/college.route");
 const docRequestRoute = require("./routes/doc.request.route");
+const signatureRequestRoute = require("./routes/signature.request.route");
+const issueDocumentRoute = require("./routes/doc.issue.route");
+const adminRoute = require("./routes/admin.route");
 
 const passportStrategy = require("./middleware/passport");
 
@@ -40,7 +43,10 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use("/auth", authRoute);
 app.use("/docName", docNameRoute);
 app.use("/college", collegeRoute);
-app.use("/doc-request", docRequestRoute);
+app.use("/document-request", docRequestRoute);
+app.use("/signature-request", signatureRequestRoute);
+app.use("/issue-document", issueDocumentRoute);
+app.use("/admin", adminRoute);
 
 //Mongoose setup
 const db = mongoose.connection;

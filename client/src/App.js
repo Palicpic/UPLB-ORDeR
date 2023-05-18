@@ -8,6 +8,7 @@ import DocRequest from "./pages/DocRequest";
 import SigRequest from "./pages/SigRequest";
 import Navbar from "./components/Navbar";
 import { CssBaseline } from "@mui/material";
+import IssueDoc from "./pages/IssueDoc";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -44,24 +45,11 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={user ? <Navigate to="/doc-request" /> : <Homepage />}
-              // element={<Homepage/>}
-            />
-            <Route exact path="doc-request" element={user ? <DocRequest user={user} /> : <Navigate to="/" />}>
-              {/* <Route
-          path="form"
-          element={user? <DocRequestForm user={user}/> : <Navigate to="/" /> }
-          /> */}
-            </Route>
-            <Route
-              exact
-              path="/signature-request"
-              // element={user? <DocRequest user={user}/>  : <Navigate to="/" />
-              element={user ? <SigRequest user={user} /> : <Navigate to="/" />}
-            />
+            <Route exact path="/" element={!user ? <Homepage /> : user.role === "student" ? <Navigate to="/doc-request" /> : user.role === "ocs" ? <Navigate to="/issue-document" /> : <Homepage />} />
+            {/* <Route exact path="/" element={user.role === "student" ? <Navigate to="/doc-request" /> : user.role === "ocs" ? <Navigate to="/issue-document" /> : <Homepage />} /> */}
+            <Route exact path="doc-request" element={user ? <DocRequest user={user} /> : <Navigate to="/" />}></Route>
+            <Route exact path="/signature-request" element={user ? <SigRequest user={user} /> : <Navigate to="/" />} />
+            <Route exact path="/issue-document" element={user ? <IssueDoc user={user} /> : <Navigate to="/" />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Paper>
