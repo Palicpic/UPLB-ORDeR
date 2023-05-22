@@ -6,14 +6,14 @@ const fs = require("fs");
 const path = require("path");
 // reading the file contents of the smart  contract
 
-const contractPath = path.resolve(__dirname, "Order.sol");
+const contractPath = path.resolve(__dirname, "Document.sol");
 const fileContent = fs.readFileSync(contractPath).toString();
 
 // create an input structure for my solidity compiler
 const input = {
   language: "Solidity",
   sources: {
-    Order: {
+    Document: {
       content: fileContent,
     },
   },
@@ -28,9 +28,6 @@ const input = {
 };
 
 const output = JSON.parse(solc.compile(JSON.stringify(input)));
-// console.log(output)
-const abi = output.contracts["Order"]["Order"].abi;
-// console.log(abi);
-const bytecode = output.contracts["Order"]["Order"]["evm"]["bytecode"]["object"];
-// console.log(bytecode);
+const abi = output.contracts["Document"]["Document"].abi;
+const bytecode = output.contracts["Document"]["Document"]["evm"]["bytecode"]["object"];
 module.exports = { abi, bytecode };

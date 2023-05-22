@@ -8,13 +8,11 @@ const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT;
 
-const authRoute = require("./routes/auth.route");
-const docNameRoute = require("./routes/document.route");
-const collegeRoute = require("./routes/college.route");
-const docRequestRoute = require("./routes/doc.request.route");
-const signatureRequestRoute = require("./routes/signature.request.route");
-const issueDocumentRoute = require("./routes/doc.issue.route");
-const adminRoute = require("./routes/admin.route");
+const authRoute = require("./routes/authRoute");
+const documentRoute = require("./routes/documentRoute");
+const signRoute = require("./routes/signRoute");
+const adminRoute = require("./routes/adminRoute");
+const contractRoute = require("./routes/contractRoute");
 
 const passportStrategy = require("./middleware/passport");
 
@@ -31,7 +29,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
@@ -41,12 +39,10 @@ app.use(bodyparser.json()); //utilizes the body-parser package
 app.use(bodyparser.urlencoded({ extended: true }));
 
 app.use("/auth", authRoute);
-app.use("/docName", docNameRoute);
-app.use("/college", collegeRoute);
-app.use("/document-request", docRequestRoute);
-app.use("/signature-request", signatureRequestRoute);
-app.use("/issue-document", issueDocumentRoute);
+app.use("/document", documentRoute);
+app.use("/sign", signRoute);
 app.use("/admin", adminRoute);
+app.use("/contract", contractRoute);
 
 //Mongoose setup
 const db = mongoose.connection;
@@ -59,5 +55,14 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, 
 // db.on('error', (err) => console.log(err.message + ' is Mongod not running?'));
 // db.on('connected', () => console.log('mongo connected: ', mongoURI));
 // db.on('disconnected', () => console.log('mongo disconnected'));
+
+if (process.env.NODE_ENV === "production") {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, "client/build")));
+  // Handle React routing, return all requests to React app
+  app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  });
+}
 
 app.listen(port, () => console.log(`Listenting on port ${port}...`));

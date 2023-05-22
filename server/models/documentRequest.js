@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const DocumentRequestSchema = new Schema(
   {
-    documentName: String,
+    document: String,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -13,12 +13,16 @@ const DocumentRequestSchema = new Schema(
     dateIssued: Date,
     semester: String,
     acadYear: String,
-    otherDocName: String,
     reason: String,
-    otherReason: String,
+    transactionHash: String,
+    documentHash: String,
     issuer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+    contract: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Contract",
     },
   },
   {

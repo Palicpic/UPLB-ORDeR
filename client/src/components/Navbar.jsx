@@ -1,8 +1,10 @@
+import React, { useContext, useState } from "react";
+import { UserContext } from "../App.js";
+import { useLocation, NavLink } from "react-router-dom";
+
 import { AppBar, Container, Toolbar, Typography, Box, Button, Tooltip, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import MenuIcon from "@mui/icons-material/Menu";
-import React from "react";
-import { useLocation, NavLink } from "react-router-dom";
 
 const NavButton = (props) => {
   return (
@@ -16,13 +18,13 @@ const NavButton = (props) => {
         mt: 3,
         display: "block",
         color: "primary",
-        backgroundColor: "#E0E0E0",
-        borderColor: "#E0E0E0",
+        backgroundColor: "#d9d9d9",
+        borderColor: "#d9d9d9",
         borderRadius: "5px 20px 0px 0px",
         // boxShadow: "2px -2px 5px 2px black",
         "&:hover": {
-          backgroundColor: "#F5F5F5",
-          borderColor: "#F5F5F5",
+          backgroundColor: "#efefef",
+          borderColor: "#efefef",
         },
         "&.active": {
           backgroundColor: "white",
@@ -38,12 +40,12 @@ const NavButton = (props) => {
   );
 };
 
-const Navbar = (userDetails) => {
-  const user = userDetails.user;
+const Navbar = () => {
+  const user = useContext(UserContext);
   const path = useLocation();
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -76,7 +78,6 @@ const Navbar = (userDetails) => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
             href="/"
             sx={{
               mr: 2,
@@ -84,30 +85,23 @@ const Navbar = (userDetails) => {
               fontFamily: "poppins",
               fontWeight: 600,
               letterSpacing: ".2rem",
-              color: "inherit",
-              textDecoration: "none",
             }}
           >
             ORDeR
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit">
+            <IconButton size="large" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
             </IconButton>
 
             <Menu
-              id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: "bottom",
                 horizontal: "left",
               }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
@@ -115,7 +109,7 @@ const Navbar = (userDetails) => {
               }}
             >
               {user && user.role === "student" && (
-                <MenuItem href="/doc-request" onClick={handleCloseNavMenu}>
+                <MenuItem href="/document-request" onClick={handleCloseNavMenu}>
                   Document Request
                 </MenuItem>
               )}
@@ -130,27 +124,25 @@ const Navbar = (userDetails) => {
                 </MenuItem>
               )}
               {user && user.role === "faculty" && (
-                <MenuItem href="/" onClick={handleCloseNavMenu}>
+                <MenuItem href="/sign-document" onClick={handleCloseNavMenu}>
                   Sign Document
                 </MenuItem>
               )}
               {user && user.role === "admin" && (
-                <MenuItem href="/" onClick={handleCloseNavMenu}>
+                <MenuItem href="/admin" onClick={handleCloseNavMenu}>
                   Admin
                 </MenuItem>
               )}
-              <MenuItem href="/" onClick={handleCloseNavMenu}>
+              <MenuItem href="/verify-document" onClick={handleCloseNavMenu}>
                 Verify Document
               </MenuItem>
             </Menu>
           </Box>
 
-          <FolderCopyIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
-            component="a" //what is this
-            href="/" //todo: not sure
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -159,15 +151,13 @@ const Navbar = (userDetails) => {
               fontWeight: 600,
               letterSpacing: ".2rem",
               color: "inherit",
-              textDecoration: "none",
             }}
           >
             ORDeR
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {user && user.role === "student" && (
-              <NavButton to="/doc-request" onClick={handleCloseNavMenu}>
+              <NavButton to="/document-request" onClick={handleCloseNavMenu}>
                 Document Request
               </NavButton>
             )}
@@ -182,17 +172,17 @@ const Navbar = (userDetails) => {
               </NavButton>
             )}
             {user && user.role === "faculty" && (
-              <NavButton to="/" onClick={handleCloseNavMenu}>
+              <NavButton to="/sign-document" onClick={handleCloseNavMenu}>
                 Sign Document
               </NavButton>
             )}
             {user && user.role === "admin" && (
-              <NavButton to="/" onClick={handleCloseNavMenu}>
+              <NavButton to="/admin" onClick={handleCloseNavMenu}>
                 Admin
               </NavButton>
             )}
             {path.pathname !== "/" && ( //search based on page
-              <NavButton to="/verify" onClick={handleCloseNavMenu}>
+              <NavButton to="/verify-document" onClick={handleCloseNavMenu}>
                 Verify Document
               </NavButton>
             )}
@@ -202,7 +192,7 @@ const Navbar = (userDetails) => {
             {user && (
               <div>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton onClick={handleOpenUserMenu}>
                     <Avatar alt={user.firstName + " " + user.lastName} src={user.profilePhoto} />
                   </IconButton>
                 </Tooltip>
@@ -233,7 +223,7 @@ const Navbar = (userDetails) => {
             )}
             {!user && (
               <div>
-                <Button variant="contained" sx={{ my: 2, color: "white", border: "2px solid", borderColor: "white" }} onClick={googleAuth}>
+                <Button variant="contained" sx={{ color: "white", border: "2px solid", borderColor: "white", borderRadius: "40px" }} onClick={googleAuth}>
                   Login with UP Mail
                 </Button>
               </div>

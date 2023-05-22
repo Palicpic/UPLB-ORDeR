@@ -1,7 +1,7 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-const UserSchema = new Schema(
+const User = new Schema(
   {
     googleId: {
       type: String,
@@ -18,26 +18,15 @@ const UserSchema = new Schema(
       displayName: String,
     },
     profilePhoto: String,
-    active: Boolean,
+    isActive: Boolean,
     college: String,
     role: {
       type: String,
       default: null,
     },
     student: {
-      type: {
-        studNum: String,
-        classification: String,
-        saisNum: String,
-        address: String,
-        mobileNum: String,
-        adviser: String,
-        degProg: String,
-        contactName: String,
-        contactPNum: String,
-        contactAdd: String,
-        idPic: String,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student",
       default: null,
     },
     lastVisited: { type: Date, default: new Date() },
@@ -47,4 +36,4 @@ const UserSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", User);

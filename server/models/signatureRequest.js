@@ -12,13 +12,15 @@ const SignatureRequestSchema = new Schema(
     reasonForRejecting: String,
     dateIssued: Date,
     message: String,
-    pdfFile: String,
+    transactionHash: String,
+    documentHash: String,
     recipient: {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      displayName: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    contract: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Contract",
     },
   },
   {
