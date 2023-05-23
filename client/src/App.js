@@ -26,7 +26,7 @@ const renderHomePage = (role) => {
     case "ocs":
       return <Navigate to="/issue-document" />;
     default:
-      return <Navigate to="/" />;
+      return <HomePage />;
   }
 };
 
@@ -53,13 +53,13 @@ const App = () => {
       <UserContext.Provider value={user}>
         <NavBar />
         <Routes>
-          <Route exact path="/" element={user ? renderHomePage(user.role) : <HomePage />}></Route>
+          <Route exact path="/" element={user ? renderHomePage(user.role) : <HomePage />} />
           <Route exact path="/document-request" element={user ? <DocumentRequest /> : <Navigate to="/" />} />
           <Route exact path="/signature-request" element={user ? <SignatureRequest /> : <Navigate to="/" />} />
           <Route exact path="/issue-document" element={user ? <IssueDocument /> : <Navigate to="/" />} />
           <Route exact path="/sign-document" element={user ? <SignDocument /> : <Navigate to="/" />} />
           <Route exact path="/admin" element={user ? <AdminPage /> : <Navigate to="/" />} />
-          <Route exact path="/verify-document" element={<VerifyDocument />}></Route>
+          <Route exact path="/verify-document" element={<VerifyDocument />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </UserContext.Provider>

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const College = require("../models/college");
 const Document = require("../models/document");
+const DocumentRequest = require("../models/documentRequest");
 
 //add new college
 router.post("/new-college", (req, res) => {

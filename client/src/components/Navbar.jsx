@@ -1,44 +1,11 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../App.js";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { AppBar, Container, Toolbar, Typography, Box, Button, Tooltip, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import MenuIcon from "@mui/icons-material/Menu";
-
-const NavButton = (props) => {
-  return (
-    <Button
-      variant="outlined"
-      disableElevation
-      size="large"
-      elevation={12}
-      sx={{
-        mx: 0.1,
-        mt: 3,
-        display: "block",
-        color: "primary",
-        backgroundColor: "#d9d9d9",
-        borderColor: "#d9d9d9",
-        borderRadius: "5px 20px 0px 0px",
-        // boxShadow: "2px -2px 5px 2px black",
-        "&:hover": {
-          backgroundColor: "#efefef",
-          borderColor: "#efefef",
-        },
-        "&.active": {
-          backgroundColor: "white",
-          borderColor: "white",
-        },
-      }}
-      component={NavLink}
-      onClick={(event) => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
-  );
-};
+import { NavButton } from "../Style.js";
 
 const Navbar = () => {
   const user = useContext(UserContext);
@@ -191,6 +158,7 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             {user && (
               <div>
+                Hi, {user.name.firstName}!
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu}>
                     <Avatar alt={user.firstName + " " + user.lastName} src={user.profilePhoto} />
@@ -212,9 +180,6 @@ const Navbar = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Profile</Typography>
-                  </MenuItem>
                   <MenuItem onClick={logout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>

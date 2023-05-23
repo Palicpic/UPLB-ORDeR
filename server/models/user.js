@@ -25,8 +25,22 @@ const User = new Schema(
       default: null,
     },
     student: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      type: {
+        number: String,
+        classification: String,
+        saisNum: String,
+        address: String,
+        mobileNum: String,
+        adviser: String,
+        degreeProgram: String,
+        contactPerson: {
+          type: {
+            name: String,
+            address: String,
+            mobileNum: String,
+          },
+        },
+      },
       default: null,
     },
     lastVisited: { type: Date, default: new Date() },

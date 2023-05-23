@@ -1,5 +1,7 @@
+import { MainContainer } from "../Style";
+
 const SignatureRequest = () => {
-  return <div>Signature Request Page</div>;
+  return <MainContainer>Signature Request Page</MainContainer>;
 };
 
 export default SignatureRequest;

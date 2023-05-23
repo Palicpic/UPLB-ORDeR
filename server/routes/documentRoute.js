@@ -1,39 +1,41 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const Student = require("../models/student");
 const DocumentRequest = require("../models/documentRequest");
 
 //new document request
 router.post("/new-request", async (req, res) => {
   try {
-    const { email, name, college, number, classification, saisNum, address, mobileNum, adviser, degreeProgram, contactPerson, idPic, document, semester, acadYear, reason } = req.body;
+    const { email, displayName, firstName, middleName, lastName, college, number, classification, saisNum, address, mobileNum, adviser, degreeProgram, contactPersonName, contactPersonAddress, contactPersonMobileNum, documentName, semester, acadYear, reasonChoice, otherDocName, otherReason } = req.body;
 
-    const user = await User.findOne({ email });
-    let studentId = user.student;
-
-    //check if already have student data
-    if (studentId) {
-      //update data
-      const student = await Student.findOneAndUpdate({ _id: studentId }, { number, classification, saisNum, address, mobileNum, adviser, degreeProgram, contactPerson, idPic });
-    } else {
-      //create new student
-      const studentData = {
-        number,
-        classification,
-        saisNum,
-        address,
-        mobileNum,
-        adviser,
-        degreeProgram,
-        contactPerson,
-        idPic,
-      };
-
-      await Student.create(studentData).then((data) => (studentId = data._id));
-    }
-
-    //update user data
-    const userData = await User.findOneAndUpdate({ email }, { name, college, student: studentId });
+    const document = otherDocName === "" ? documentName : otherDocName;
+    const reason = otherReason === "" ? reasonChoice : otherReason;
+    console.log(email);
+    const user = await User.findOneAndUpdate(
+      { email },
+      {
+        name: {
+          firstName,
+          middleName,
+          lastName,
+          displayName,
+        },
+        college,
+        student: {
+          number,
+          classification,
+          saisNum,
+          address,
+          mobileNum,
+          adviser,
+          degreeProgram,
+          contactPerson: {
+            name: contactPersonName,
+            address: contactPersonAddress,
+            mobileNum: contactPersonMobileNum,
+          },
+        },
+      }
+    );
 
     //create new Document Request
     const newDocRequest = await DocumentRequest.create({
