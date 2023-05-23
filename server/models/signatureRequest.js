@@ -14,6 +14,7 @@ const SignatureRequestSchema = new Schema(
     message: String,
     transactionHash: String,
     documentHash: String,
+    pdfFile: Object,
     recipient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
