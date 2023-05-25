@@ -69,6 +69,7 @@ const SignatureRequestModal = (props) => {
             },
           });
           if (data.data === "Success") {
+            props.getSignRequestList();
             props.setSentAlert(true);
             formValues.recipient = formValues.subject = formValues.message = formValues.pdfFile = "";
             handleClose();

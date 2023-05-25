@@ -1,4 +1,4 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, Box } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 const NavButton = (props) => {
@@ -16,7 +16,6 @@ const NavButton = (props) => {
         backgroundColor: "#d9d9d9",
         borderColor: "#d9d9d9",
         borderRadius: "5px 20px 0px 0px",
-        // boxShadow: "2px -2px 5px 2px black",
         "&:hover": {
           backgroundColor: "#efefef",
           borderColor: "#efefef",
@@ -39,4 +38,8 @@ const MainContainer = (props) => {
   return <Container disableGutters maxWidth="false" sx={{ backgroundImage: "linear-gradient(178deg, rgba(142,21,55,1) 0%, rgba(150,60,85,1) 42%, rgba(255,255,255,1) 100%);" }} {...props} />;
 };
 
-export { NavButton, MainContainer };
+const MainBox = (props) => {
+  return <Box sx={{ bgcolor: "white", height: "92vh", borderRadius: "50px 50px 0 0", justifyContent: "center", overflow: "auto" }} {...props} />;
+};
+
+export { NavButton, MainContainer, MainBox };

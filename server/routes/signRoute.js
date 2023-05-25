@@ -46,6 +46,7 @@ router.get("/request/:userId", async (req, res) => {
   SignatureRequest.find({ user: req.params.userId })
     .populate("recipient")
     .populate("user")
+    .sort({ createdAt: -1 })
     .then((data) => res.json(data))
     .catch((err) => res.status(400).json(err));
 });

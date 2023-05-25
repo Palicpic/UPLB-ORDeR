@@ -41,6 +41,7 @@ const DocumentRequestForm = (props) => {
       try {
         const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/document/new-request`, formValues);
         if (data.data === "Success") {
+          props.getDocRequestList();
           props.setSuccessAlert(true);
           formValues.documentName = formValues.semester = formValues.acadYear = formValues.otherDocName = formValues.reasonChoice = formValues.otherReason = "";
           props.handleClose();
@@ -75,7 +76,7 @@ const DocumentRequestForm = (props) => {
   useEffect(() => {
     getDocs();
     getColleges();
-  });
+  }, []);
 
   return (
     <Box sx={{ px: 5, pt: 3 }}>

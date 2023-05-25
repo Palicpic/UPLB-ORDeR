@@ -15,11 +15,14 @@ const DocumentRequestModal = (props) => {
       <Paper
         sx={{
           backgroundImage: "linear-gradient(171deg, rgba(142,21,55,0.5) 0%, rgba(150,60,85,0.5) 2%, rgba(244,244,244,0.5) 40%)",
-          height: "80vh",
+          maxHeight: "80vh",
           overflow: "auto",
-          mt: "80px",
           borderRadius: "40px",
           backdropFilter: "blur(50px)",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
         }}
       >
         <Box
@@ -35,8 +38,7 @@ const DocumentRequestModal = (props) => {
         <Typography variant="h4" align="center" sx={{ color: "primary.main", pt: "5px", fontWeight: "medium" }}>
           New Document Request
         </Typography>
-        <DocumentRequestForm formValues={formValues} handleChange={props.handleChange} handleClose={props.onClose} setSuccessAlert={props.setSuccessAlert} />
-        <Box sx={{ display: "flex", justifyContent: "center" }}></Box>
+        <DocumentRequestForm formValues={formValues} handleChange={props.handleChange} handleClose={props.onClose} getDocRequestList={props.getDocRequestList} setSuccessAlert={props.setSuccessAlert} />
       </Paper>
     </Container>
   );

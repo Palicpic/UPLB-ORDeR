@@ -1,17 +1,25 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const Web3 = require("web3");
+const { abi } = require("./compile.js");
 
-const getWalletBalance = async (testnetArg, addressArg, privateKeyArg) => {
-  // console.log(testnetArg);
-  // console.log(addressArg);
-  // console.log(privateKeyArg);
-  const provider = new HDWalletProvider(privateKeyArg, testnetArg);
-  // console.log(provider);
+const getWalletBalance = async (testnet, address, privateKey) => {
+  const provider = new HDWalletProvider(privateKey, testnet);
   const web3 = new Web3(provider);
-  const balanceWei = await web3.eth.getBalance(addressArg);
+  const balanceWei = await web3.eth.getBalance(address);
   const balanceEther = web3.utils.fromWei(balanceWei, "ether");
 
   return balanceEther;
 };
 
-module.exports = { getWalletBalance };
+const newDocument = async (testnet, address, privateKey, contractAdd, document) => {
+  const { documentHash, studentEmail, issuer, signatureEmails } = document;
+  const provider = new HDWalletProvider(privateKey, testnet);
+  const web3 = new Web3(provider);
+  let contract = new web3.eth.Contract(abi, contractAdd);
+  const transactionReceipt = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).send({ gas: "200000", gasPrice: "10000000000", from: address });
+  const estimateGasNeeded = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).estimateGas();
+  console.log("gas during setCertificate: ", estimateGasNeeded);
+  return transactionReceipt;
+};
+
+module.exports = { getWalletBalance, newDocument };
