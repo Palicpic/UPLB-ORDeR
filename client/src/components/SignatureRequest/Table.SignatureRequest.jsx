@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TablePagination, Button, MenuItem, IconButton, Typography, InputAdornment, TextField, Grid, Container, Box } from "@mui/material/";
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TablePagination, Button, MenuItem, IconButton, Typography, InputAdornment, TextField, Grid, Container, Box, Modal } from "@mui/material/";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
+
+import SignDocumentForm from "../SignInfo";
 
 const columns = [
   { id: "dateRequested", label: "Date Requested", width: "20%" },
@@ -17,6 +20,8 @@ const SignatureRequestTable = (props) => {
   const rowsPerPage = 8;
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const handleChangeStatusFilter = (event) => {
     setStatusFilter(event.target.value);
@@ -25,6 +30,15 @@ const SignatureRequestTable = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleViewClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const getStatusColor = (status) => {
@@ -106,7 +120,7 @@ const SignatureRequestTable = (props) => {
                   {row.status}
                 </TableCell>
                 <TableCell align={"center"}>
-                  <Button variant="outlined" color="primary" sx={{ borderRadius: "40px" }}>
+                  <Button variant="outlined" color="primary" onClick={() => handleViewClick(row)} sx={{ borderRadius: "40px" }}>
                     View Details
                   </Button>
                 </TableCell>
@@ -122,6 +136,36 @@ const SignatureRequestTable = (props) => {
             </Typography>
           </Container>
         )}
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <Container disableGutters maxWidth="md" sx={{ justifyContent: "center" }}>
+            <Paper
+              sx={{
+                backgroundImage: "linear-gradient(171deg, rgba(142,21,55,0.5) 0%, rgba(150,60,85,0.5) 2%, rgba(244,244,244,0.5) 40%)",
+                maxHeight: "80vh",
+                overflow: "auto",
+                borderRadius: "40px",
+                backdropFilter: "blur(50px)",
+                mt: "100px",
+                pb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  pt: "7px",
+                  mr: "13px",
+                }}
+              >
+                <CloseIcon fontSize="medium" color="primary" cursor="pointer" onClick={handleClose} />
+              </Box>
+              <Typography variant="h4" align="center" sx={{ color: "primary.main", pt: "5px", fontWeight: "medium" }}>
+                Signature Request
+              </Typography>
+              <SignDocumentForm rowData={selectedRowData} student={true} />
+            </Paper>
+          </Container>
+        </Modal>
       </Paper>
     </Box>
   );

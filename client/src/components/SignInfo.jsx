@@ -1,6 +1,6 @@
 import { Box, Typography, Grid, Link } from "@mui/material/";
 
-import StudentData from "../StudentData";
+import StudentData from "./StudentData";
 
 const SignDocumentForm = (props) => {
   const rowData = props.rowData;
@@ -25,17 +25,29 @@ const SignDocumentForm = (props) => {
           </Typography>
         </Grid>
       )}
-      <Typography variant="h6" sx={{ pt: 1 }}>
-        Requested by:{" "}
-      </Typography>
+      {!props.student && (
+        <>
+          <Typography variant="h6" sx={{ pt: 1 }}>
+            Requested by:
+          </Typography>
 
-      <StudentData rowData={rowData.user} />
+          <StudentData rowData={rowData.user} />
+        </>
+      )}
 
       <Typography variant="h6" sx={{ pt: 3 }}>
         Signature Request Information
       </Typography>
 
       <Grid container spacing={1} sx={{ pt: 1, px: 2 }}>
+        {props.student && (
+          <Grid item xs={12} sm={12}>
+            <Typography>
+              <strong>Recipient: </strong> {rowData.recipient.name.displayName} ({rowData.recipient.email})
+            </Typography>
+          </Grid>
+        )}
+
         <Grid item xs={12} sm={12}>
           <Typography>
             <strong>Subject: </strong> {rowData.subject}
@@ -46,7 +58,7 @@ const SignDocumentForm = (props) => {
             <strong>Message: </strong> {rowData.message}
           </Typography>
         </Grid>
-        {rowData.status === "Pending" && (
+        {(rowData.status === "Pending" || rowData.status === "Denied") && (
           <Grid item xs={12} sm={12}>
             <strong>File: </strong>
             <Link href={filepath} target="_blank" rel="noopener noreferrer">

@@ -134,9 +134,6 @@ const DocumentRequestTable = (props) => {
           </Container>
         )}
         <Modal open={open} onClose={() => setOpen(false)}>
-          {/* <>
-            <IssueDocumentModal rowData={selectedRowData} onClose={() => setOpen(false)} setSuccessMessage={props.setAlertMessage} setSuccessAlert={props.setSuccessAlert} getDocRequestList={props.getDocRequestList} />
-          </> */}
           <Container disableGutters maxWidth="md" sx={{ justifyContent: "center" }}>
             <Paper
               sx={{

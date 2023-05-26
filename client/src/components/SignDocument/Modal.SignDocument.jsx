@@ -5,7 +5,7 @@ import axios from "axios";
 import { Container, Box, Paper, Typography, Button, TextField, LinearProgress, Grid, Snackbar, Alert } from "@mui/material/";
 import CloseIcon from "@mui/icons-material/Close";
 
-import SignDocumentForm from "./SignInfo";
+import SignDocumentForm from "../SignInfo";
 
 const SignDocumentModal = (props) => {
   const row = props.rowData;
@@ -106,7 +106,7 @@ const SignDocumentModal = (props) => {
         <Typography variant="h4" align="center" sx={{ color: "primary.main", pt: "5px", fontWeight: "medium" }}>
           Sign Document Request
         </Typography>
-        <SignDocumentForm rowData={row} />
+        <SignDocumentForm rowData={row} student={false} />
         {row.status === "Pending" && (
           <>
             {!isRejected && !isUploading && (
