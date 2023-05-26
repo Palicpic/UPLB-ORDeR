@@ -5,7 +5,7 @@ import axios from "axios";
 import { Container, Box, Paper, Typography, Button, TextField, LinearProgress, Grid, Snackbar, Alert } from "@mui/material/";
 import CloseIcon from "@mui/icons-material/Close";
 
-import IssueDocumentForm from "../DocumentInfo";
+import DocumentInfo from "../DocumentInfo";
 
 const IssueDocumentModal = (props) => {
   const row = props.rowData;
@@ -83,11 +83,14 @@ const IssueDocumentModal = (props) => {
             "Content-Type": "multipart/form-data",
           },
         });
-
         if (data.data === "Success") {
           setIsUploading(false);
           props.getDocRequestList();
           handleSuccessAlert(true, "Issue Document Success!");
+          handleClose();
+        } else {
+          setAlert(true);
+          setAlertMessage(data.dataError);
           handleClose();
         }
       }
@@ -126,7 +129,7 @@ const IssueDocumentModal = (props) => {
         <Typography variant="h4" align="center" sx={{ color: "primary.main", pt: "5px", fontWeight: "medium" }}>
           Document Request
         </Typography>
-        <IssueDocumentForm rowData={row} />
+        <DocumentInfo rowData={row} isIssue={true} />
         {row.status === "Pending" && (
           <>
             {isRejected && (

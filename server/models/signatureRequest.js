@@ -10,7 +10,7 @@ const SignatureRequestSchema = new Schema(
     subject: String,
     status: String,
     reasonForRejecting: String,
-    dateIssued: Date,
+    dateSigned: Date,
     message: String,
     transactionHash: String,
     documentHash: String,
@@ -19,10 +19,7 @@ const SignatureRequestSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    contract: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Contract",
-    },
+    contract: String,
   },
   {
     timestamps: { type: Date, default: Date.now() },

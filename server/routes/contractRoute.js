@@ -5,6 +5,7 @@ const { create } = require("ipfs-http-client");
 
 const Contract = require("../models/contract");
 const DocumentRequest = require("../models/documentRequest");
+const SignatureRequest = require("../models/signatureRequest");
 const User = require("../models/user");
 
 const { getWalletBalance, newDocument } = require("../contracts/interact");
@@ -34,6 +35,28 @@ const storage = multer.diskStorage({
 
 // Create the multer instance
 const upload = multer({ storage });
+
+const createIpfs = async (file) => {
+  const projectId = process.env.PROJECT_ID;
+  const projectSecret = process.env.PROJECT_SECRET;
+  const auth = "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
+  const ipfsObj = {
+    localhost: { host: "localhost", port: "5001", protocol: "http" },
+    infura: {
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+      headers: {
+        authorization: auth,
+      },
+    },
+  };
+  let ipfs = create(ipfsObj["infura"]);
+  const fileBuffer = fs.readFileSync(file.path);
+  const fileAdded = await ipfs.add({ path: file.filename, content: fileBuffer });
+  const fileHash = fileAdded.cid.toString();
+  return fileHash;
+};
 
 router.post("/deploy", async (req, res) => {
   try {
@@ -66,7 +89,6 @@ router.get("/has-contract", (req, res) => {
     .catch((err) => res.status(400).json(err));
 });
 
-//issue document
 //issue a document
 router.post("/issue-document/new", upload.single("studentFile"), async (req, res) => {
   try {
@@ -76,55 +98,75 @@ router.post("/issue-document/new", upload.single("studentFile"), async (req, res
 
     const issuer = await User.findById({ _id: userId });
     const documentRequest = await DocumentRequest.findOne({ _id: rowId }).populate("user");
-    // console.log(documentRequest);
-    console.log(documentRequest.user.email);
-    console.log(issuer.email);
-
-    const projectId = process.env.PROJECT_ID;
-    const projectSecret = process.env.PROJECT_SECRET;
-    const auth = "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
-    const ipfsObj = {
-      localhost: { host: "localhost", port: "5001", protocol: "http" },
-      infura: {
-        host: "ipfs.infura.io",
-        port: 5001,
-        protocol: "https",
-        headers: {
-          authorization: auth,
-        },
-      },
-    };
-    let ipfs = await create(ipfsObj["infura"]);
-    const fileBuffer = fs.readFileSync(file.path);
-    const fileAdded = await ipfs.add({ path: file.filename, content: fileBuffer });
-    const fileHash = fileAdded.cid.toString();
-
-    const document = {
-      documentHash: fileHash,
-      studentEmail: documentRequest.user.email,
-      issuer: issuer.email,
-      signatureEmails: [],
-    };
-    // const document = {
-    //   documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1ph",
-    //   studentEmail: documentRequest.user.email,
-    //   issuer: issuer.email,
-    //   signatureEmails: [],
-    // };
-    console.log(document);
 
     const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
     console.log(etherBalance);
 
     if (parseFloat(etherBalance) >= 0.002) {
-      console.log("loob na");
+      const fileHash = await createIpfs(file);
+
+      const document = {
+        documentHash: fileHash,
+        studentEmail: documentRequest.user.email,
+        issuer: issuer.email,
+        signatureEmails: [],
+      };
+      console.log(document);
+
       const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document);
       console.log(transactionReceipt);
 
-      await DocumentRequest.findOneAndUpdate({ _id: rowId }, { status, dateIssued: Date.now(), documentHash: document.documentHash, contract: contractAddress, issuer: issuer._id, transactionHash: transactionReceipt.transactionHash });
-      fs.unlinkSync(`./uploads/${file.filename}`);
+      if (transactionReceipt) {
+        await DocumentRequest.findOneAndUpdate({ _id: rowId }, { status, dateIssued: Date.now(), documentHash: document.documentHash, contract: contractAddress, issuer: issuer._id, transactionHash: transactionReceipt.transactionHash });
+        fs.unlinkSync(`./uploads/${file.filename}`);
 
-      res.status(200).json({ data: "Success" });
+        res.status(200).json({ data: "Success" });
+      } else {
+        res.status(404).json({ dataError: "Authentication failed due to network congestion on blockchain network. Try again later!" });
+      }
+    } else {
+      res.status(404).json({ dataError: `You do not have at least 0.002 Ether. You only have ${etherBalance} Ether. Please get more Ether` });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ dataError: err });
+  }
+});
+
+router.post("/sign-document/new", async (req, res) => {
+  try {
+    const { rowId, contractAddress, userId } = req.body;
+    const status = "Signed";
+
+    const signee = await User.findById({ _id: userId });
+    const signatureRequest = await SignatureRequest.findOne({ _id: rowId }).populate("user").populate("recipient");
+    const file = signatureRequest.pdfFile;
+
+    const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
+    console.log(etherBalance);
+
+    if (parseFloat(etherBalance) >= 0.002) {
+      const fileHash = await createIpfs(file);
+
+      const document = {
+        documentHash: fileHash,
+        studentEmail: signatureRequest.user.email,
+        issuer: "",
+        signatureEmails: [signatureRequest.user.email, signee.email],
+      };
+      console.log(document);
+
+      const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document);
+      console.log(transactionReceipt);
+
+      if (transactionReceipt) {
+        await SignatureRequest.findOneAndUpdate({ _id: rowId }, { status, dateSigned: Date.now(), documentHash: document.documentHash, contract: contractAddress, transactionHash: transactionReceipt.transactionHash });
+        fs.unlinkSync(`./uploads/${file.filename}`);
+
+        res.status(200).json({ data: "Success" });
+      } else {
+        res.status(404).json({ dataError: "Authentication failed due to network congestion on blockchain network. Try again later!" });
+      }
     } else {
       res.status(404).json({ dataError: `You do not have at least 0.002 Ether. You only have ${etherBalance} Ether. Please get more Ether` });
     }

@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { UserContext } from "../App.js";
 import axios from "axios";
 
-import { Container, Box, Grid, Typography, Snackbar, Alert } from "@mui/material/";
+import { Container, Grid, Typography, Snackbar, Alert } from "@mui/material/";
 import { MainContainer, MainBox } from "../Style";
 
 import IssueDocumentTable from "../components/IssueDocument/Table.IssueDocument.jsx";

@@ -43,6 +43,7 @@ app.use("/document", documentRoute);
 app.use("/sign", signRoute);
 app.use("/admin", adminRoute);
 app.use("/contract", contractRoute);
+app.use("/uploads", express.static("uploads"));
 
 //Mongoose setup
 const db = mongoose.connection;

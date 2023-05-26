@@ -58,6 +58,7 @@ router.post("/new-request", async (req, res) => {
 //get all document request per user
 router.get("/request/:userId", async (req, res) => {
   DocumentRequest.find({ user: req.params.userId })
+    .populate("user")
     .sort({ createdAt: -1 })
     .then((data) => res.json(data))
     .catch((err) => res.status(400).json(err));

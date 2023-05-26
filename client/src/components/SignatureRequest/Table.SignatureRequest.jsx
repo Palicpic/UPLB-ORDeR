@@ -10,7 +10,7 @@ const columns = [
   { id: "viewFullDetails", label: "View Full Details", width: "15%" },
 ];
 
-const statusOptions = ["All", "Issued", "Pending", "Denied"];
+const statusOptions = ["All", "Signed", "Pending", "Denied"];
 
 const SignatureRequestTable = (props) => {
   const rows = props.signRequestList;
@@ -31,7 +31,7 @@ const SignatureRequestTable = (props) => {
     switch (status) {
       case "Pending":
         return "#fbc02d"; // Yellow color
-      case "Issued":
+      case "Signed":
         return "#4caf50"; // Green color
       case "Denied":
         return "#f44336"; // Red color
@@ -101,7 +101,10 @@ const SignatureRequestTable = (props) => {
                 <TableCell align={"center"}>{row.createdAt.toString().replace(/T/, " ").replace(/\..+/, "")}</TableCell>
                 <TableCell align={"center"}>{row.recipient.name.displayName}</TableCell>
                 <TableCell align={"center"}>{row.subject}</TableCell>
-                <TableCell align={"center"}>{row.status}</TableCell>
+                <TableCell align={"center"}>
+                  <StatusCircle color={getStatusColor(row.status)} />
+                  {row.status}
+                </TableCell>
                 <TableCell align={"center"}>
                   <Button variant="outlined" color="primary" sx={{ borderRadius: "40px" }}>
                     View Details

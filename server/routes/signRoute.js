@@ -42,8 +42,19 @@ router.post("/new-request", upload.single("pdfFile"), async (req, res) => {
   }
 });
 
-router.get("/request/:userId", async (req, res) => {
+//get all student request
+router.get("/request-student/:userId", async (req, res) => {
   SignatureRequest.find({ user: req.params.userId })
+    .populate("recipient")
+    .populate("user")
+    .sort({ createdAt: -1 })
+    .then((data) => res.json(data))
+    .catch((err) => res.status(400).json(err));
+});
+
+//get all student request
+router.get("/request-faculty/:userId", async (req, res) => {
+  SignatureRequest.find({ recipient: req.params.userId })
     .populate("recipient")
     .populate("user")
     .sort({ createdAt: -1 })
@@ -56,6 +67,25 @@ router.get("/find-email/:email", async (req, res) => {
   User.find({ email: req.params.email })
     .then((data) => res.json(data))
     .catch((err) => res.status(400).json(err));
+});
+
+//request is rejected
+router.post("/sign-document/rejected", async (req, res) => {
+  try {
+    const { rowId, reasonForRejecting } = req.body;
+    const status = "Denied";
+    const documentRequest = await SignatureRequest.findOneAndUpdate(
+      { _id: rowId },
+      {
+        reasonForRejecting,
+        status,
+      }
+    );
+    res.status(200).json({ data: "Success" });
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ dataError: err });
+  }
 });
 
 module.exports = router;

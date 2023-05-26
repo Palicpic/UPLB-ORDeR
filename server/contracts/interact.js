@@ -16,10 +16,15 @@ const newDocument = async (testnet, address, privateKey, contractAdd, document) 
   const provider = new HDWalletProvider(privateKey, testnet);
   const web3 = new Web3(provider);
   let contract = new web3.eth.Contract(abi, contractAdd);
-  const transactionReceipt = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).send({ gas: "200000", gasPrice: "10000000000", from: address });
-  const estimateGasNeeded = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).estimateGas();
-  console.log("gas during setCertificate: ", estimateGasNeeded);
-  return transactionReceipt;
+  try {
+    const transactionReceipt = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).send({ gas: "5000000", gasPrice: "10000000000", from: address });
+    const estimateGasNeeded = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).estimateGas();
+    console.log("gas during setCertificate: ", estimateGasNeeded);
+    return transactionReceipt;
+  } catch (error) {
+    // An error occurred while getting the transaction receipt
+    console.error(error);
+  }
 };
 
 module.exports = { getWalletBalance, newDocument };

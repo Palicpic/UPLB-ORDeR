@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TablePagination, Button, MenuItem, IconButton, Typography, InputAdornment, TextField, Grid, Container, Box } from "@mui/material/";
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TablePagination, Button, MenuItem, IconButton, Typography, InputAdornment, TextField, Grid, Container, Box, Modal } from "@mui/material/";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
+
+import DocumentInfo from "../DocumentInfo";
 
 const columns = [
   { id: "dateRequested", label: "Date Requested", width: "20%" },
@@ -16,6 +19,8 @@ const DocumentRequestTable = (props) => {
   const rowsPerPage = 8;
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
 
   const handleChangeStatusFilter = (event) => {
     setStatusFilter(event.target.value);
@@ -24,6 +29,15 @@ const DocumentRequestTable = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleViewClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const getStatusColor = (status) => {
@@ -53,7 +67,6 @@ const DocumentRequestTable = (props) => {
   );
 
   const filteredRows = statusFilter === "All" ? rows : rows.filter((row) => row.status === statusFilter);
-
   return (
     <Box>
       <Grid container justifyContent="flex-end" pr={2}>
@@ -99,9 +112,12 @@ const DocumentRequestTable = (props) => {
               <TableRow key={row.id}>
                 <TableCell align={"center"}>{row.createdAt.toString().replace(/T/, " ").replace(/\..+/, "")}</TableCell>
                 <TableCell align={"center"}>{row.document}</TableCell>
-                <TableCell align={"center"}>{row.status}</TableCell>
                 <TableCell align={"center"}>
-                  <Button variant="outlined" color="primary" sx={{ borderRadius: "40px" }}>
+                  <StatusCircle color={getStatusColor(row.status)} />
+                  {row.status}
+                </TableCell>
+                <TableCell align={"center"}>
+                  <Button variant="outlined" color="primary" onClick={() => handleViewClick(row)} sx={{ borderRadius: "40px" }}>
                     View Details
                   </Button>
                 </TableCell>
@@ -117,6 +133,40 @@ const DocumentRequestTable = (props) => {
             </Typography>
           </Container>
         )}
+        <Modal open={open} onClose={() => setOpen(false)}>
+          {/* <>
+            <IssueDocumentModal rowData={selectedRowData} onClose={() => setOpen(false)} setSuccessMessage={props.setAlertMessage} setSuccessAlert={props.setSuccessAlert} getDocRequestList={props.getDocRequestList} />
+          </> */}
+          <Container disableGutters maxWidth="md" sx={{ justifyContent: "center" }}>
+            <Paper
+              sx={{
+                backgroundImage: "linear-gradient(171deg, rgba(142,21,55,0.5) 0%, rgba(150,60,85,0.5) 2%, rgba(244,244,244,0.5) 40%)",
+                maxHeight: "80vh",
+                // maxWidth: "md",
+                overflow: "auto",
+                borderRadius: "40px",
+                backdropFilter: "blur(50px)",
+                mt: "100px",
+                pb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  pt: "7px",
+                  mr: "13px",
+                }}
+              >
+                <CloseIcon fontSize="medium" color="primary" cursor="pointer" onClick={handleClose} />
+              </Box>
+              <Typography variant="h4" align="center" sx={{ color: "primary.main", pt: "5px", fontWeight: "medium" }}>
+                Document Request
+              </Typography>
+              <DocumentInfo rowData={selectedRowData} isIssue={false} />
+            </Paper>
+          </Container>
+        </Modal>
       </Paper>
     </Box>
   );

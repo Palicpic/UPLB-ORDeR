@@ -133,7 +133,7 @@ const SignatureRequestModal = (props) => {
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button variant="contained" size="large" onClick={handleSubmit} endIcon={<SendIcon />} sx={{ m: 3, borderRadius: "40px" }}>
-            Send Request
+            Sign Document & Send Request
           </Button>
         </Box>
       </Paper>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-import { Container, Box, Grid, Typography, Paper, TextField, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material/";
+import { Container, Grid, Typography, TextField, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material/";
 import { MainContainer, MainBox } from "../Style";
 
 const choices = ["Enter Document Transaction Hash", "Upload Document"];
