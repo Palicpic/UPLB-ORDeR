@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { UserContext } from "../App.js";
 import axios from "axios";
 
-import { Container, Box, Grid, Button, Typography, Modal, Snackbar, Alert } from "@mui/material/";
+import { Container, Grid, Button, Typography, Modal, Snackbar, Alert } from "@mui/material/";
 import AddIcon from "@mui/icons-material/Add";
 import { MainContainer, MainBox } from "../Style";
 
@@ -83,7 +83,7 @@ const DocumentRequest = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={4} xl={3}>
-              <Button startIcon={<AddIcon />} fullWidth variant="contained" size="large" onClick={handleOpen} sx={{ borderRadius: "40px", boxShadow: 4 }}>
+              <Button startIcon={<AddIcon />} fullWidth variant="contained" size="large" onClick={handleOpen} sx={{ borderRadius: "40px", boxShadow: 4, mt: { sm: 1, xs: 1, md: 0, lg: 0, xl: 0 } }}>
                 New Document Request
               </Button>
               <Modal open={open} onClose={handleClose}>

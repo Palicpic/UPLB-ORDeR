@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../App.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { AppBar, Container, Toolbar, Typography, Box, Button, Tooltip, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
@@ -10,6 +10,7 @@ import { NavButton } from "../Style.js";
 const Navbar = () => {
   const user = useContext(UserContext);
   const path = useLocation();
+  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -27,6 +28,11 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleNavigation = (routePath) => {
+    navigate(routePath);
+    handleCloseNavMenu(); // Assuming you have a function to close the navigation menu
   };
 
   const googleAuth = () => {
@@ -75,36 +81,12 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {user && user.role === "admin" && (
-                <MenuItem href="/admin" onClick={handleCloseNavMenu}>
-                  Admin
-                </MenuItem>
-              )}
-              {user && (user.role === "student" || user.role === "admin") && (
-                <MenuItem href="/document-request" onClick={handleCloseNavMenu}>
-                  Document Request
-                </MenuItem>
-              )}
-              {user && (user.role === "ocs" || user.role === "admin") && (
-                <MenuItem href="/issue-document" onClick={handleCloseNavMenu}>
-                  Issue Document
-                </MenuItem>
-              )}
-              {user && (user.role === "student" || user.role === "admin") && (
-                <MenuItem href="/signature-request" onClick={handleCloseNavMenu}>
-                  Signature Request
-                </MenuItem>
-              )}
-
-              {user && (user.role === "faculty" || user.role === "admin") && (
-                <MenuItem href="/sign-document" onClick={handleCloseNavMenu}>
-                  Sign Document
-                </MenuItem>
-              )}
-
-              <MenuItem href="/verify-document" onClick={handleCloseNavMenu}>
-                Verify Document
-              </MenuItem>
+              {user && user.role === "admin" && <MenuItem onClick={() => handleNavigation("/admin")}>Admin</MenuItem>}
+              {user && (user.role === "student" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/document-request")}>Document Request</MenuItem>}
+              {user && (user.role === "ocs" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/issue-document")}>Issue Document</MenuItem>}
+              {user && (user.role === "student" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/signature-request")}>Signature Request</MenuItem>}
+              {user && (user.role === "faculty" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/sign-document")}>Sign Document</MenuItem>}
+              <MenuItem onClick={() => handleNavigation("/verify-document")}>Verify Document</MenuItem>
             </Menu>
           </Box>
 
