@@ -98,7 +98,7 @@ const SignatureRequestTable = (props) => {
           </TextField>
         </Grid>
       </Grid>
-      <Paper elevation={4} sx={{ height: "72vh", borderRadius: "40px", bgcolor: "#F5F5F5", overflow: "auto", mt: 1, pt: 2 }}>
+      <Paper elevation={4} sx={{ minHeight: "72vh", borderRadius: "40px", bgcolor: "#F5F5F5", overflow: "auto", mt: 1, pt: 2 }}>
         <Table aria-label="table">
           <TableHead>
             <TableRow>

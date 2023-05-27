@@ -1,4 +1,4 @@
-import { Button, Container, Box, Paper } from "@mui/material";
+import { Button, Container, Box } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 const NavButton = (props) => {
@@ -39,11 +39,7 @@ const MainContainer = (props) => {
 };
 
 const MainBox = (props) => {
-  return <Box sx={{ bgcolor: "white", height: "92vh", borderRadius: "50px 50px 0 0", justifyContent: "center", overflow: "auto" }} {...props} />;
+  return <Box sx={{ bgcolor: "white", borderRadius: "50px 50px 0 0", justifyContent: "center", overflow: "auto" }} {...props} />;
 };
 
-const PaperAdmin = (props) => {
-  return <Paper sx={{ height: "38vh", borderRadius: "40px", m: 2, boxShadow: "1px 1px 1px 0px #963c55, 1px 1px 1px 1px #aa4360" }} elevation={7} {...props} />;
-};
-
-export { NavButton, MainContainer, MainBox, PaperAdmin };
+export { NavButton, MainContainer, MainBox };

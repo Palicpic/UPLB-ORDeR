@@ -81,11 +81,11 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {user && user.role === "admin" && <MenuItem onClick={() => handleNavigation("/admin")}>Admin</MenuItem>}
-              {user && (user.role === "student" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/document-request")}>Document Request</MenuItem>}
-              {user && (user.role === "ocs" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/issue-document")}>Issue Document</MenuItem>}
-              {user && (user.role === "student" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/signature-request")}>Signature Request</MenuItem>}
-              {user && (user.role === "faculty" || user.role === "admin") && <MenuItem onClick={() => handleNavigation("/sign-document")}>Sign Document</MenuItem>}
+              {user && user.role === "Admin" && <MenuItem onClick={() => handleNavigation("/admin")}>Admin</MenuItem>}
+              {user && (user.role === "Student" || user.role === "Admin") && <MenuItem onClick={() => handleNavigation("/document-request")}>Document Request</MenuItem>}
+              {user && (user.role === "OCS Staff" || user.role === "Admin") && <MenuItem onClick={() => handleNavigation("/issue-document")}>Issue Document</MenuItem>}
+              {user && (user.role === "Student" || user.role === "Admin") && <MenuItem onClick={() => handleNavigation("/signature-request")}>Signature Request</MenuItem>}
+              {user && (user.role === "Faculty" || user.role === "Admin") && <MenuItem onClick={() => handleNavigation("/sign-document")}>Sign Document</MenuItem>}
               <MenuItem onClick={() => handleNavigation("/verify-document")}>Verify Document</MenuItem>
             </Menu>
           </Box>
@@ -107,28 +107,28 @@ const Navbar = () => {
             ORDeR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {user && user.role === "admin" && (
+            {user && user.role === "Admin" && (
               <NavButton to="/admin" onClick={handleCloseNavMenu}>
                 Admin
               </NavButton>
             )}
-            {user && (user.role === "student" || user.role === "admin") && (
+            {user && (user.role === "Student" || user.role === "Admin") && (
               <NavButton to="/document-request" onClick={handleCloseNavMenu}>
                 Document Request
               </NavButton>
             )}
-            {user && (user.role === "ocs" || user.role === "admin") && (
+            {user && (user.role === "OCS Staff" || user.role === "Admin") && (
               <NavButton to="/issue-document" onClick={handleCloseNavMenu}>
                 Issue Document
               </NavButton>
             )}
-            {user && (user.role === "student" || user.role === "admin") && (
+            {user && (user.role === "Student" || user.role === "Admin") && (
               <NavButton to="/signature-request" onClick={handleCloseNavMenu}>
                 Signature Request
               </NavButton>
             )}
 
-            {user && (user.role === "faculty" || user.role === "admin") && (
+            {user && (user.role === "Faculty" || user.role === "Admin") && (
               <NavButton to="/sign-document" onClick={handleCloseNavMenu}>
                 Sign Document
               </NavButton>

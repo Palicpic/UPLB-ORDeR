@@ -18,7 +18,6 @@ const User = new Schema(
       displayName: String,
     },
     profilePhoto: String,
-    isActive: Boolean,
     college: String,
     role: {
       type: String,

@@ -1,9 +1,19 @@
-import { Container, Box, Grid, Button, Typography, Modal, Snackbar, Alert, Paper } from "@mui/material/";
-import { MainContainer, MainBox, PaperAdmin } from "../Style";
+import React, { useState } from "react";
+
+import { Container, Box, Grid, Typography, Tab, Tabs } from "@mui/material/";
+import { MainContainer, MainBox } from "../Style";
 
 import ManageUser from "../components/Admin/ManageUser";
+import SmartContract from "../components/Admin/SmartContract";
+import BlockchainData from "../components/Admin/BlockchainData";
 
 const AdminPage = () => {
+  const [value, setValue] = useState(1);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <MainContainer>
       <MainBox>
@@ -14,20 +24,18 @@ const AdminPage = () => {
                 Admin
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <PaperAdmin>
-                <ManageUser />
-              </PaperAdmin>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <PaperAdmin>2</PaperAdmin>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <PaperAdmin>3</PaperAdmin>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <PaperAdmin>4</PaperAdmin>
-            </Grid>
+            <Box sx={{ width: "100%", typography: "body1" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs value={value} onChange={handleChange}>
+                  <Tab label="Users" value={1} />
+                  <Tab label="Smart Contract" value={2} />
+                  <Tab label="Documents saved in Blockchain" value={3} />
+                </Tabs>
+              </Box>
+            </Box>
+            {value === 1 && <ManageUser />}
+            {value === 2 && <SmartContract />}
+            {value === 3 && <BlockchainData />}
           </Grid>
         </Container>
       </MainBox>

@@ -17,8 +17,19 @@ const newDocument = async (testnet, address, privateKey, contractAdd, document) 
   const web3 = new Web3(provider);
   let contract = new web3.eth.Contract(abi, contractAdd);
   try {
-    const transactionReceipt = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).send({ gas: "5000000", gasPrice: "10000000000", from: address });
-    const estimateGasNeeded = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).estimateGas();
+    //if issue document or document is not yet on the record
+    // const transactionReceipt = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).send({ gas: "5000000", gasPrice: "10000000000", from: address });
+    // const estimateGasNeeded = await contract.methods.issueDocument(documentHash, studentEmail, issuer, signatureEmails).estimateGas();
+    // console.log("gas during setCertificate: ", estimateGasNeeded);
+
+    //TODO sa contract
+    // edit issuer
+    // add list of document hash
+    //event and emit
+
+    //if document already in the record, check if may issuer or email, if may issuer pero may issuer na error, if may record na at walang issuer, do this kasi sign un
+    const transactionReceipt = await contract.methods.addIssuerEmail(documentHash, signatureEmails[1]).send({ gas: "5000000", gasPrice: "10000000000", from: address });
+    const estimateGasNeeded = await contract.methods.addIssuerEmail(documentHash, signatureEmails[1]).estimateGas();
     console.log("gas during setCertificate: ", estimateGasNeeded);
     return transactionReceipt;
   } catch (error) {

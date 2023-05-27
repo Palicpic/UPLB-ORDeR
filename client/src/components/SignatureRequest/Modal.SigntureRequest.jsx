@@ -51,7 +51,7 @@ const SignatureRequestModal = (props) => {
     if (handleErrors()) setAlert(true);
     else {
       const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/sign/find-email/${formValues.recipient}`);
-      if (data.length === 0 || data[0].role !== "faculty") {
+      if (data.length === 0 || data[0].role !== "Faculty") {
         setAlertMessage("Recipient Faculty Email not found!");
         setAlert(true);
       } else {

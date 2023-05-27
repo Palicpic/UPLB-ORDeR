@@ -17,13 +17,13 @@ export const UserContext = createContext();
 
 const renderHomePage = (role) => {
   switch (role) {
-    case "admin":
+    case "Admin":
       return <Navigate to="/admin" />;
-    case "student":
+    case "Student":
       return <Navigate to="/document-request" />;
-    case "faculty":
+    case "Faculty":
       return <Navigate to="/sign-document" />;
-    case "ocs":
+    case "OCS Staff":
       return <Navigate to="/issue-document" />;
     default:
       return <HomePage />;

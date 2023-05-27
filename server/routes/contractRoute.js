@@ -8,7 +8,7 @@ const DocumentRequest = require("../models/documentRequest");
 const SignatureRequest = require("../models/signatureRequest");
 const User = require("../models/user");
 
-const { getWalletBalance, newDocumen, getDocumentData } = require("../contracts/interact");
+const { getWalletBalance, newDocument, getDocumentData } = require("../contracts/interact");
 const deployContract = require("../contracts/deploy");
 
 const address = process.env.WALLET_ADD;
@@ -63,13 +63,13 @@ router.post("/deploy", async (req, res) => {
     const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
     if (parseFloat(etherBalance) >= 0.0075) {
       console.log("here");
-      const contractAddress = await deployContract(testnetObj[testnet], address, privateKey);
-      console.log(contractAddress);
-      const net = await Contract.create({
-        testNet: testnet,
-        address: contractAddress,
-        walletAddress: address,
-      });
+      // const contractAddress = await deployContract(testnetObj[testnet], address, privateKey);
+      // console.log(contractAddress);
+      // const net = await Contract.create({
+      //   testNet: testnet,
+      //   address: contractAddress,
+      //   walletAddress: address,
+      // });
 
       res.status(200).json({ data: "Success" });
     } else {
@@ -234,6 +234,22 @@ router.post("/verify", upload.single("file"), async (req, res) => {
     } else {
       res.status(404).json({ dataError: "The file uploaded doesn't match any document record!" });
     }
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ dataError: err });
+  }
+});
+
+//get all documents
+router.get("/documents", async (req, res) => {
+  try {
+    const contract = Contract.findOne({ status: "Active" });
+    console.log(contract.address);
+
+    // const result = await getAllCertificates(testnetObj[req.body.testnet], address, req.body.privateKey, deployedContract.address);
+    const documents = [];
+
+    res.status(200).json({ data: "Success", documents: documents });
   } catch (err) {
     console.log(err);
     res.status(404).json({ dataError: err });
