@@ -27,4 +27,22 @@ const newDocument = async (testnet, address, privateKey, contractAdd, document) 
   }
 };
 
-module.exports = { getWalletBalance, newDocument };
+const getDocumentData = async (testnet, address, privateKey, contractAdd, fileHash) => {
+  const provider = new HDWalletProvider(privateKey, testnet);
+  const web3 = new Web3(provider);
+  let contract = new web3.eth.Contract(abi, contractAdd);
+  try {
+    const document = await contract.methods.getDocumentInfo(fileHash).call({ from: address });
+    const documentData = {
+      studentEmail: document["0"],
+      issuer: document["1"],
+      signatureEmails: document["2"],
+    };
+    return documentData;
+  } catch (error) {
+    // An error occurred while getting the transaction receipt
+    console.error(error);
+  }
+};
+
+module.exports = { getWalletBalance, newDocument, getDocumentData };

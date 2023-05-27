@@ -8,7 +8,7 @@ const DocumentRequest = require("../models/documentRequest");
 const SignatureRequest = require("../models/signatureRequest");
 const User = require("../models/user");
 
-const { getWalletBalance, newDocument } = require("../contracts/interact");
+const { getWalletBalance, newDocumen, getDocumentData } = require("../contracts/interact");
 const deployContract = require("../contracts/deploy");
 
 const address = process.env.WALLET_ADD;
@@ -176,4 +176,67 @@ router.post("/sign-document/new", async (req, res) => {
   }
 });
 
+router.post("/verify", upload.single("file"), async (req, res) => {
+  try {
+    const file = req.file;
+
+    const fileHash = await createIpfs(file);
+    let contractAddress = "";
+
+    //find document hash on document request and signature request
+    const signatureRequestData = await SignatureRequest.findOne({ documentHash: fileHash });
+    const documentRequestData = await DocumentRequest.findOne({ documentHash: fileHash });
+
+    console.log(signatureRequestData);
+    console.log(documentRequestData);
+
+    if (signatureRequestData) {
+      contractAddress = signatureRequestData.contract;
+    } else if (documentRequestData) {
+      contractAddress = documentRequestData.contract;
+    }
+
+    if (contractAddress !== "") {
+      const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
+
+      if (parseFloat(etherBalance) >= 0.002) {
+        const documentData = await getDocumentData(testnetObj[testnet], address, privateKey, contractAddress, fileHash);
+        console.log(documentData);
+        if (documentData) {
+          const { studentEmail, issuer, signatureEmails } = documentData;
+          const student = await User.findOne({ email: studentEmail });
+          const studentName = student.name.displayName;
+          let issuerInfo = "";
+          if (issuer !== "") {
+            const issuerData = await User.findOne({ email: issuer });
+            const issuerCollege = issuerData.college;
+            issuerInfo = "UPLB " + issuerCollege + "-OCS";
+          }
+          const signatureStorage = {};
+          if (signatureEmails.length !== 0) {
+            const users = await User.find({ email: { $in: signatureEmails } }); // Find users matching the provided email list
+
+            users.forEach((user) => {
+              signatureStorage[user.email] = user.name.displayName;
+            });
+          }
+
+          // const signatureEmails = key is email, name
+          const document = { fileHash, studentEmail, studentName, issuerInfo, signatureStorage };
+          // const document = "test";
+          res.status(200).json({ data: "Success", document: document });
+        } else {
+          res.status(404).json({ dataError: "Document is in the record, but error happened while retrieving the data from blockchain!" });
+        }
+      } else {
+        res.status(404).json({ dataError: `You do not have at least 0.002 Ether. You only have ${etherBalance} Ether. Please get more Ether` });
+      }
+    } else {
+      res.status(404).json({ dataError: "The file uploaded doesn't match any document record!" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ dataError: err });
+  }
+});
 module.exports = router;
