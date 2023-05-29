@@ -21,6 +21,7 @@ const SmartContract = () => {
   const [rows, setRows] = useState([]);
   const [statusValue, setStatusValue] = useState("");
   const [page, setPage] = useState(0);
+  const [deploy, setDeploy] = useState(rows ? (rows.some((data) => data.status === "Inactive") ? true : false) : false);
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -33,13 +34,21 @@ const SmartContract = () => {
     setIsLoading(false);
   };
 
+  const canDeploy = () => {
+    if (rows) {
+      if (rows.some((data) => data.status === "Active")) setDeploy(false);
+      if (rows.some((data) => data.status === "Inactive")) setDeploy(true);
+    } else setDeploy(true);
+  };
+
   const handleEditClick = (id) => {
     setRows((prevData) =>
       prevData.map((row) => {
         if (row._id === id) {
+          setStatusValue(row.status);
           return { ...row, editMode: true };
         }
-        return row;
+        return { ...row, editMode: false };
       })
     );
   };
@@ -58,6 +67,7 @@ const SmartContract = () => {
       })
     );
     setStatusValue("");
+    canDeploy();
   };
 
   const handleCancelClick = (id) => {
@@ -69,6 +79,7 @@ const SmartContract = () => {
         return row;
       })
     );
+    getRows();
   };
 
   const handleChange = (e, id, key) => {
@@ -98,6 +109,7 @@ const SmartContract = () => {
       const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/contract/deploy`);
       if (data) {
         getRows();
+        canDeploy();
         setIsLoading(false);
         handleAlert("success", "Deployment Success!");
       }
@@ -113,7 +125,6 @@ const SmartContract = () => {
       const url = `${process.env.REACT_APP_API_URL}/admin/contracts`;
       const { data } = await axios.get(url, { withCredentials: true });
       setRows(data);
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -134,7 +145,7 @@ const SmartContract = () => {
           </Grid>
           <Grid item xs={12} md={3}>
             {!isLoading && (
-              <Button fullWidth variant="contained" onClick={handleDeployment} sx={{ borderRadius: "40px", boxShadow: 4, m: 1 }}>
+              <Button fullWidth variant="contained" disabled={!deploy} onClick={handleDeployment} sx={{ borderRadius: "40px", boxShadow: 4, m: 1 }}>
                 Deploy New Smart Contract
               </Button>
             )}

@@ -15,6 +15,7 @@ const columns = [
 ];
 
 const roleOptions = ["All", "Student", "Faculty", "OCS Staff", "Admin"];
+const collegeOptions = ["CAFS", "CAS", "CDC", "CEAT", "CEM", "CFNR", "CHE", "CVM"];
 
 const ManageUser = () => {
   const [roleFilter, setRoleFilter] = useState("All");
@@ -23,6 +24,7 @@ const ManageUser = () => {
   const [toDelete, setToDelete] = useState(false);
   const [toDeleteData, setToDeleteData] = useState([]);
   const [roleValue, setRoleValue] = useState("");
+  const [collegeValue, setCollegeValue] = useState("");
   const [page, setPage] = useState(0);
 
   const handleEditClick = (id) => {
@@ -31,13 +33,13 @@ const ManageUser = () => {
         if (row._id === id) {
           return { ...row, editMode: true };
         }
-        return row;
+        return { ...row, editMode: false };
       })
     );
   };
 
   const handleSaveClick = async (id) => {
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit-role/${id}`, { roleValue });
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit/${id}`, { roleValue, collegeValue });
     if (data.data === "Success") {
       getRows();
     }
@@ -50,6 +52,7 @@ const ManageUser = () => {
       })
     );
     setRoleValue("");
+    setCollegeValue("");
   };
 
   const handleCancelClick = (id) => {
@@ -61,11 +64,16 @@ const ManageUser = () => {
         return row;
       })
     );
+    getRows();
   };
 
   const handleChange = (e, id, key) => {
     const { value } = e.target;
-    setRoleValue(value);
+    if (key === "role") {
+      setRoleValue(value);
+    } else if (key === "college") {
+      setCollegeValue(value);
+    }
     setRows((prevData) =>
       prevData.map((row) => {
         if (row._id === id) {
@@ -164,7 +172,19 @@ const ManageUser = () => {
               <TableRow key={row._id}>
                 <TableCell align={"center"}>{row.email}</TableCell>
                 <TableCell align={"center"}>{row.name.displayName}</TableCell>
-                <TableCell align={"center"}>{row.college}</TableCell>
+                <TableCell align={"center"}>
+                  {row.editMode ? (
+                    <TextField select value={row.college} onChange={(e) => handleChange(e, row._id, "college")} variant="standard" margin="dense">
+                      {collegeOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  ) : (
+                    <Typography>{row.college}</Typography>
+                  )}
+                </TableCell>
                 <TableCell align={"center"}>
                   {row.editMode ? (
                     <TextField select value={row.role} onChange={(e) => handleChange(e, row._id, "role")} variant="standard" margin="dense">

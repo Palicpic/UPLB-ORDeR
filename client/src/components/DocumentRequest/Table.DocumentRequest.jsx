@@ -139,7 +139,6 @@ const DocumentRequestTable = (props) => {
               sx={{
                 backgroundImage: "linear-gradient(171deg, rgba(142,21,55,0.5) 0%, rgba(150,60,85,0.5) 2%, rgba(244,244,244,0.5) 40%)",
                 maxHeight: "80vh",
-                // maxWidth: "md",
                 overflow: "auto",
                 borderRadius: "40px",
                 backdropFilter: "blur(50px)",

@@ -16,6 +16,7 @@ const Homepage = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("lg"));
   const [roleValue, setRoleValue] = useState("Student");
+  const collegeValue = "";
 
   const imgHeight = matches ? "40vh" : "55vh";
 
@@ -25,9 +26,8 @@ const Homepage = () => {
 
   const handleProceed = async () => {
     const id = user._id;
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit-role/${id}`, { roleValue });
+    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit/${id}`, { roleValue, collegeValue });
     if (data.data === "Success") {
-      console.log("henlo");
       window.location.reload();
     }
   };

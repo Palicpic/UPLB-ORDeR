@@ -58,11 +58,11 @@ const SignDocumentForm = (props) => {
             <strong>Message: </strong> {rowData.message}
           </Typography>
         </Grid>
-        {(rowData.status === "Pending" || rowData.status === "Denied") && (
+        {rowData.status === "Pending" && (
           <Grid item xs={12} sm={12}>
             <strong>File: </strong>
             <Link href={filepath} target="_blank" rel="noopener noreferrer">
-              {filepath}
+              {rowData.pdfFile.filename}
             </Link>
             <iframe
               src={filepath}
@@ -73,6 +73,13 @@ const SignDocumentForm = (props) => {
               }}
               title="PDF Viewer"
             />
+          </Grid>
+        )}
+        {rowData.status === "Denied" && (
+          <Grid item xs={12} sm={12}>
+            <Typography>
+              <strong>File: </strong> {rowData.pdfFile.filename}
+            </Typography>
           </Grid>
         )}
         {rowData.status === "Signed" && (

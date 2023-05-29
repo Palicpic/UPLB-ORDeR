@@ -4,8 +4,8 @@ const solc = require("solc");
 // file system - read and write files to your computer
 const fs = require("fs");
 const path = require("path");
-// reading the file contents of the smart  contract
 
+// reading the file contents of the smart  contract
 const contractPath = path.resolve(__dirname, "Document.sol");
 const fileContent = fs.readFileSync(contractPath).toString();
 

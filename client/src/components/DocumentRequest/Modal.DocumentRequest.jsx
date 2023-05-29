@@ -11,7 +11,7 @@ const DocumentRequestModal = (props) => {
   };
 
   return (
-    <Container disableGutters maxWidth="lg" sx={{ justifyContent: "center" }}>
+    <Container disableGutters maxWidth="md" sx={{ justifyContent: "center" }}>
       <Paper
         sx={{
           backgroundImage: "linear-gradient(171deg, rgba(142,21,55,0.5) 0%, rgba(150,60,85,0.5) 2%, rgba(244,244,244,0.5) 40%)",
@@ -19,10 +19,7 @@ const DocumentRequestModal = (props) => {
           overflow: "auto",
           borderRadius: "40px",
           backdropFilter: "blur(50px)",
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          mt: "100px",
         }}
       >
         <Box

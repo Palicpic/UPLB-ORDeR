@@ -51,25 +51,26 @@ const SignDocumentModal = (props) => {
   const handleSignDocument = async () => {
     //check if contract is deployed
     const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/has-contract`, { withCredentials: true });
-    formValues.contractAddress = data.length === 0 ? "" : data[0].address;
+    formValues.contractAddress = data.length === 0 ? "" : data.address;
     console.log(formValues.contractAddress);
 
     if (data.length === 0) {
       setAlert(true);
       setAlertMessage("No Smart Contract deployed! Contact Admin.");
     } else {
-      setIsUploading(true);
+      try {
+        setIsUploading(true);
 
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/contract/sign-document/new`, formValues);
+        await axios.post(`${process.env.REACT_APP_API_URL}/contract/sign-document/new`, formValues);
 
-      if (data.data === "Success") {
         setIsUploading(false);
         props.getSignRequestList();
         handleSuccessAlert(true, "Sign Document Success!");
         handleClose();
-      } else {
+      } catch (err) {
         setAlert(true);
-        setAlertMessage(data.dataError);
+        console.log(err.response.data.dataError);
+        setAlertMessage(err.response.data.dataError);
         handleClose();
       }
     }

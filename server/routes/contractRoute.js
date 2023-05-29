@@ -8,7 +8,7 @@ const DocumentRequest = require("../models/documentRequest");
 const SignatureRequest = require("../models/signatureRequest");
 const User = require("../models/user");
 
-const { getWalletBalance, newDocument, getDocumentData } = require("../contracts/interact");
+const { getWalletBalance, newDocument, getDocumentData, getAllDocuments } = require("../contracts/interact");
 const deployContract = require("../contracts/deploy");
 
 const address = process.env.WALLET_ADD;
@@ -36,6 +36,7 @@ const storage = multer.diskStorage({
 // Create the multer instance
 const upload = multer({ storage });
 
+//create ipfs instance, add the document to ipfs and get the document hash
 const createIpfs = async (file) => {
   const projectId = process.env.PROJECT_ID;
   const projectSecret = process.env.PROJECT_SECRET;
@@ -58,19 +59,17 @@ const createIpfs = async (file) => {
   return fileHash;
 };
 
+//deploy a smart contract
 router.post("/deploy", async (req, res) => {
   try {
     const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
     if (parseFloat(etherBalance) >= 0.0075) {
-      console.log("here");
-      // const contractAddress = await deployContract(testnetObj[testnet], address, privateKey);
-      // console.log(contractAddress);
-      // const net = await Contract.create({
-      //   testNet: testnet,
-      //   address: contractAddress,
-      //   walletAddress: address,
-      // });
-
+      const contractAddress = await deployContract(testnetObj[testnet], address, privateKey);
+      const net = await Contract.create({
+        testNet: testnet,
+        address: contractAddress,
+        walletAddress: address,
+      });
       res.status(200).json({ data: "Success" });
     } else {
       console.log("Not enough Ether", etherBalance);
@@ -82,9 +81,9 @@ router.post("/deploy", async (req, res) => {
   }
 });
 
-//check if there is contract deployed
+//check if there is contract deployed and active
 router.get("/has-contract", (req, res) => {
-  Contract.find()
+  Contract.findOne({ status: "Active" })
     .then((data) => res.json(data))
     .catch((err) => res.status(400).json(err));
 });
@@ -100,7 +99,6 @@ router.post("/issue-document/new", upload.single("studentFile"), async (req, res
     const documentRequest = await DocumentRequest.findOne({ _id: rowId }).populate("user");
 
     const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
-    console.log(etherBalance);
 
     if (parseFloat(etherBalance) >= 0.002) {
       const fileHash = await createIpfs(file);
@@ -111,10 +109,8 @@ router.post("/issue-document/new", upload.single("studentFile"), async (req, res
         issuer: issuer.email,
         signatureEmails: [],
       };
-      console.log(document);
 
-      const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document);
-      console.log(transactionReceipt);
+      const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document, "new");
 
       if (transactionReceipt) {
         await DocumentRequest.findOneAndUpdate({ _id: rowId }, { status, dateIssued: Date.now(), documentHash: document.documentHash, contract: contractAddress, issuer: issuer._id, transactionHash: transactionReceipt.transactionHash });
@@ -133,6 +129,7 @@ router.post("/issue-document/new", upload.single("studentFile"), async (req, res
   }
 });
 
+//sign a document
 router.post("/sign-document/new", async (req, res) => {
   try {
     const { rowId, contractAddress, userId } = req.body;
@@ -143,7 +140,6 @@ router.post("/sign-document/new", async (req, res) => {
     const file = signatureRequest.pdfFile;
 
     const etherBalance = await getWalletBalance(testnetObj[testnet], address, privateKey);
-    console.log(etherBalance);
 
     if (parseFloat(etherBalance) >= 0.002) {
       const fileHash = await createIpfs(file);
@@ -154,10 +150,8 @@ router.post("/sign-document/new", async (req, res) => {
         issuer: "",
         signatureEmails: [signatureRequest.user.email, signee.email],
       };
-      console.log(document);
 
-      const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document);
-      console.log(transactionReceipt);
+      const transactionReceipt = await newDocument(testnetObj[testnet], address, privateKey, contractAddress, document, "sign");
 
       if (transactionReceipt) {
         await SignatureRequest.findOneAndUpdate({ _id: rowId }, { status, dateSigned: Date.now(), documentHash: document.documentHash, contract: contractAddress, transactionHash: transactionReceipt.transactionHash });
@@ -176,6 +170,7 @@ router.post("/sign-document/new", async (req, res) => {
   }
 });
 
+//verify a document
 router.post("/verify", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
@@ -186,9 +181,6 @@ router.post("/verify", upload.single("file"), async (req, res) => {
     //find document hash on document request and signature request
     const signatureRequestData = await SignatureRequest.findOne({ documentHash: fileHash });
     const documentRequestData = await DocumentRequest.findOne({ documentHash: fileHash });
-
-    console.log(signatureRequestData);
-    console.log(documentRequestData);
 
     if (signatureRequestData) {
       contractAddress = signatureRequestData.contract;
@@ -201,7 +193,6 @@ router.post("/verify", upload.single("file"), async (req, res) => {
 
       if (parseFloat(etherBalance) >= 0.002) {
         const documentData = await getDocumentData(testnetObj[testnet], address, privateKey, contractAddress, fileHash);
-        console.log(documentData);
         if (documentData) {
           const { studentEmail, issuer, signatureEmails } = documentData;
           const student = await User.findOne({ email: studentEmail });
@@ -221,9 +212,7 @@ router.post("/verify", upload.single("file"), async (req, res) => {
             });
           }
 
-          // const signatureEmails = key is email, name
           const document = { fileHash, studentEmail, studentName, issuerInfo, signatureStorage };
-          // const document = "test";
           res.status(200).json({ data: "Success", document: document });
         } else {
           res.status(404).json({ dataError: "Document is in the record, but error happened while retrieving the data from blockchain!" });
@@ -243,13 +232,15 @@ router.post("/verify", upload.single("file"), async (req, res) => {
 //get all documents
 router.get("/documents", async (req, res) => {
   try {
-    const contract = Contract.findOne({ status: "Active" });
-    console.log(contract.address);
+    const contract = await Contract.findOne({ status: "Active" });
 
-    // const result = await getAllCertificates(testnetObj[req.body.testnet], address, req.body.privateKey, deployedContract.address);
-    const documents = [];
+    if (contract) {
+      const result = await getAllDocuments(testnetObj[testnet], address, privateKey, contract.address);
 
-    res.status(200).json({ data: "Success", documents: documents });
+      res.status(200).json({ data: "Success", documents: result });
+    } else {
+      res.status(404).json({ dataError: "No Active Contract. Contact Admin." });
+    }
   } catch (err) {
     console.log(err);
     res.status(404).json({ dataError: err });

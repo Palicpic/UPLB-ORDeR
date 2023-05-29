@@ -16,68 +16,7 @@ const BlockchainData = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [severity, setSeverity] = useState("");
 
-  const [rows, setRows] = useState([
-    {
-      documentHash: "QmUtd5HxpUV9i3P633NgttMagHej2bjuLXDCGqXUJUVahT",
-      studentEmail: "iyenpalicpic@gmail.com",
-      issuer: "iyenpalicpic@gmail.com",
-      signatureEmails: [],
-    },
-    {
-      documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1p",
-      studentEmail: "scpalicpic@up.edu.ph",
-      issuer: "",
-      signatureEmails: ["scpalicpic@up.edu.ph", "iyenpalicpic@gmail.com"],
-    },
-    {
-      documentHash: "QmUtd5HxpUV9i3P633NgttMagHej2bjuLXDCGqXUJUVahT",
-      studentEmail: "iyenpalicpic@gmail.com",
-      issuer: "iyenpalicpic@gmail.com",
-      signatureEmails: [],
-    },
-    {
-      documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1p",
-      studentEmail: "scpalicpic@up.edu.ph",
-      issuer: "",
-      signatureEmails: ["scpalicpic@up.edu.ph", "iyenpalicpic@gmail.com"],
-    },
-    {
-      documentHash: "QmUtd5HxpUV9i3P633NgttMagHej2bjuLXDCGqXUJUVahT",
-      studentEmail: "iyenpalicpic@gmail.com",
-      issuer: "iyenpalicpic@gmail.com",
-      signatureEmails: [],
-    },
-    {
-      documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1p",
-      studentEmail: "scpalicpic@up.edu.ph",
-      issuer: "",
-      signatureEmails: ["scpalicpic@up.edu.ph", "iyenpalicpic@gmail.com"],
-    },
-    {
-      documentHash: "QmUtd5HxpUV9i3P633NgttMagHej2bjuLXDCGqXUJUVahT",
-      studentEmail: "iyenpalicpic@gmail.com",
-      issuer: "iyenpalicpic@gmail.com",
-      signatureEmails: [],
-    },
-    {
-      documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1p",
-      studentEmail: "scpalicpic@up.edu.ph",
-      issuer: "",
-      signatureEmails: ["scpalicpic@up.edu.ph", "iyenpalicpic@gmail.com"],
-    },
-    {
-      documentHash: "QmUtd5HxpUV9i3P633NgttMagHej2bjuLXDCGqXUJUVahT",
-      studentEmail: "iyenpalicpic@gmail.com",
-      issuer: "iyenpalicpic@gmail.com",
-      signatureEmails: [],
-    },
-    {
-      documentHash: "QmfK5rUgUQ6JPtUFSTGGS4143w4uXDr1Mp7kZ2yTX5mn1p",
-      studentEmail: "scpalicpic@up.edu.ph",
-      issuer: "",
-      signatureEmails: ["scpalicpic@up.edu.ph", "iyenpalicpic@gmail.com"],
-    },
-  ]);
+  const [rows, setRows] = useState([]);
 
   const handleAlert = (type, message) => {
     setSeverity(type);
@@ -90,13 +29,14 @@ const BlockchainData = () => {
     try {
       setIsLoading(true);
       const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/documents`);
-      if (data) {
+      if (data.data) {
         setRows(data.documents);
         setIsLoading(false);
         handleAlert("success", "Getting Documents Success!");
       }
     } catch (err) {
-      handleAlert("error", "Error in Getting Documents!");
+      if (err.response.data.dataError.message) handleAlert("error", err.response.data.dataError.message);
+      else handleAlert("error", err.response.data.dataError);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 import { Box, FormControl, InputLabel, Select, MenuItem, Typography, Grid, TextField, Button, Alert, Snackbar } from "@mui/material/";
@@ -6,11 +6,11 @@ import { Box, FormControl, InputLabel, Select, MenuItem, Typography, Grid, TextF
 const sems = ["All semesters enrolled", "1st Semester", "2nd Semester", "Midterm"];
 const reason = ["Extension", "Medical/Law School", "Scholarship", "Readmission", "Graduate Study", "Student Org Recognition", "Job Application/OJT", "Reinstatement", "Transfer/Shift", "Others"];
 const classification = ["Freshman", "Sophomore", "Junior", "Senior"];
+const colleges = ["CAFS", "CAS", "CDC", "CEAT", "CEM", "CFNR", "CHE", "CVM"];
+const docs = ["Form 5", "True Copy of Grades", "Certification: Bonafide Student", "Certification: Completion of Academic Requirements", "Certification: Completion of PE (PEPE)", "Certification: General Weighted Average", "Certification: Good Moral Character signed by the College Secretary", "Certification: Good Moral Character signed by the Dean", "Certification: Graduation", "Certification: Non-contract", "Certification: Prospective candidate for graduation", "Certification: Scholastic Standing", "Certification: Units earned", "Certification: Units required in curriculum", "Certification: Year level/Classification", "Other:"];
 
 const DocumentRequestForm = (props) => {
   const formValues = props.formValues;
-  const [docs, setDocs] = useState([]);
-  const [colleges, setColleges] = useState([]);
   const [alert, setAlert] = useState(false);
 
   const handleChange = (e) => {
@@ -52,32 +52,6 @@ const DocumentRequestForm = (props) => {
     }
   };
 
-  //get the list of all documents for dropdown menu
-  const getDocs = async () => {
-    try {
-      const docUrl = `${process.env.REACT_APP_API_URL}/admin/documents`;
-      const { data } = await axios.get(docUrl, { withCredentials: true });
-      setDocs(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getColleges = async () => {
-    try {
-      const collegeUrl = `${process.env.REACT_APP_API_URL}/admin/colleges/`;
-      const { data } = await axios.get(collegeUrl, { withCredentials: true });
-      setColleges(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getDocs();
-    getColleges();
-  }, []);
-
   return (
     <Box sx={{ px: 5, pt: 3 }}>
       <Snackbar open={alert} autoHideDuration={6000} onClose={() => setAlert(false)}>
@@ -93,8 +67,8 @@ const DocumentRequestForm = (props) => {
             <InputLabel id="docname">Document Request</InputLabel>
             <Select labelId="select-doc-label" id="select-doc" name="documentName" value={formValues.documentName} label="Document Request*" onChange={handleChange}>
               {docs.map((doc) => (
-                <MenuItem key={doc.name} value={doc.name}>
-                  <Typography>{doc.name}</Typography>
+                <MenuItem key={doc} value={doc}>
+                  <Typography>{doc}</Typography>
                 </MenuItem>
               ))}
             </Select>
@@ -182,8 +156,8 @@ const DocumentRequestForm = (props) => {
             <InputLabel id="college">College</InputLabel>
             <Select labelId="select-college-label" id="select-college" name="college" value={formValues.college} label="Document Request*" onChange={handleChange}>
               {colleges.map((college) => (
-                <MenuItem key={college.name} value={college.name}>
-                  <Typography>{college.name}</Typography>
+                <MenuItem key={college} value={college}>
+                  <Typography>{college}</Typography>
                 </MenuItem>
               ))}
             </Select>
@@ -203,7 +177,7 @@ const DocumentRequestForm = (props) => {
           <Grid item xs={12} sm={12}>
             <TextField required id="address" name="address" label="Home Address" fullWidth value={formValues.address} onChange={handleChange} variant="standard" multiline />
           </Grid>
-          <Grid item xs={12} sm={12} sx={{ pt: "15px" }}>
+          <Grid item xs={12} sm={12} sx={{ mt: "20px" }}>
             <Typography variant="h7">Contact Person:</Typography>
           </Grid>
 

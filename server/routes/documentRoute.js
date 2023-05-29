@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 const User = require("../models/user");
 const DocumentRequest = require("../models/documentRequest");
 
@@ -11,6 +10,7 @@ router.post("/new-request", async (req, res) => {
     const document = otherDocName === "" ? documentName : otherDocName;
     const reason = otherReason === "" ? reasonChoice : otherReason;
 
+    //find the user and update the fields
     const user = await User.findOneAndUpdate(
       { email },
       {

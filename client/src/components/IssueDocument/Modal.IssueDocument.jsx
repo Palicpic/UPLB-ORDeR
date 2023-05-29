@@ -61,7 +61,7 @@ const IssueDocumentModal = (props) => {
     } else {
       //check if contract is deployed
       const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/has-contract`, { withCredentials: true });
-      formValues.contractAddress = data.length === 0 ? "" : data[0].address;
+      formValues.contractAddress = data.length === 0 ? "" : data.address;
       console.log(formValues.contractAddress);
 
       if (data.length === 0) {
