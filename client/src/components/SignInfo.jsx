@@ -4,7 +4,7 @@ import StudentData from "./StudentData";
 
 const SignDocumentForm = (props) => {
   const rowData = props.rowData;
-  const filepath = `${process.env.REACT_APP_API_URL}/${rowData.pdfFile.path}`;
+  const filepath = `/${rowData.pdfFile.path}`;
 
   return (
     <Box sx={{ px: 4, pt: 3 }}>

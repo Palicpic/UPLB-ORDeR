@@ -39,7 +39,7 @@ const DocumentRequestForm = (props) => {
     if (handleErrors()) setAlert(true);
     else {
       try {
-        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/document/new-request`, formValues);
+        const { data } = await axios.post(`/document/new-request`, formValues);
         if (data.data === "Success") {
           props.getDocRequestList();
           props.setSuccessAlert(true);

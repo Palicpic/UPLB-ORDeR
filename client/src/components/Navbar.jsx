@@ -36,11 +36,11 @@ const Navbar = () => {
   };
 
   const googleAuth = () => {
-    window.open(`${process.env.REACT_APP_API_URL}/auth/google/callback`, "_self");
+    window.open(`/auth/google/callback`, "_self");
   };
 
   const logout = () => {
-    window.open(`${process.env.REACT_APP_API_URL}/auth/logout`, "_self");
+    window.open(`/auth/logout`, "_self");
   };
 
   return (

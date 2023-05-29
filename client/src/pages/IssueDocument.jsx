@@ -16,7 +16,7 @@ const IssueDocument = () => {
   const getDocRequestList = useCallback(async () => {
     try {
       const userCollege = user.college;
-      const docListUrl = `${process.env.REACT_APP_API_URL}/document/request-ocs/${userCollege}`;
+      const docListUrl = `/document/request-ocs/${userCollege}`;
       const { data } = await axios.get(docListUrl, { withCredentials: true });
       setDocRequestList(data);
     } catch (err) {

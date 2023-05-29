@@ -54,7 +54,7 @@ const SmartContract = () => {
   };
 
   const handleSaveClick = async (id) => {
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/contract/edit-status/${id}`, { statusValue });
+    const { data } = await axios.post(`/admin/contract/edit-status/${id}`, { statusValue });
     if (data.data === "Success") {
       getRows();
     }
@@ -106,7 +106,7 @@ const SmartContract = () => {
   const handleDeployment = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/contract/deploy`);
+      const { data } = await axios.post(`/contract/deploy`);
       if (data) {
         getRows();
         canDeploy();
@@ -122,7 +122,7 @@ const SmartContract = () => {
 
   const getRows = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_URL}/admin/contracts`;
+      const url = `/admin/contracts`;
       const { data } = await axios.get(url, { withCredentials: true });
       setRows(data);
     } catch (err) {

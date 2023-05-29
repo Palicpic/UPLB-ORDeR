@@ -26,7 +26,7 @@ const Homepage = () => {
 
   const handleProceed = async () => {
     const id = user._id;
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit/${id}`, { roleValue, collegeValue });
+    const { data } = await axios.post(`/admin/user/edit/${id}`, { roleValue, collegeValue });
     if (data.data === "Success") {
       window.location.reload();
     }

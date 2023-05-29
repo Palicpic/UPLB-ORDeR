@@ -34,7 +34,7 @@ const VerifyDocument = () => {
         }
       }
       axios
-        .post(`${process.env.REACT_APP_API_URL}/contract/verify`, formData, {
+        .post(`/contract/verify`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

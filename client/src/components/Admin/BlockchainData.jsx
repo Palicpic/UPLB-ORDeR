@@ -28,7 +28,7 @@ const BlockchainData = () => {
   const handleShowDocuments = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/documents`);
+      const { data } = await axios.get(`/contract/documents`);
       if (data.data) {
         setRows(data.documents);
         setIsLoading(false);

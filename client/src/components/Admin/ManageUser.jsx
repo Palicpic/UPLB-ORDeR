@@ -39,7 +39,7 @@ const ManageUser = () => {
   };
 
   const handleSaveClick = async (id) => {
-    const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/admin/user/edit/${id}`, { roleValue, collegeValue });
+    const { data } = await axios.post(`/admin/user/edit/${id}`, { roleValue, collegeValue });
     if (data.data === "Success") {
       getRows();
     }
@@ -95,7 +95,7 @@ const ManageUser = () => {
   const filteredRows = roleFilter === "All" ? rows : rows.filter((row) => row.status === roleFilter);
 
   const handleDeleteUser = async () => {
-    const { data } = await axios.delete(`${process.env.REACT_APP_API_URL}/admin/user/delete/${toDeleteData._id}`);
+    const { data } = await axios.delete(`/admin/user/delete/${toDeleteData._id}`);
     if (data.data === "Success") {
       getRows();
       setToDelete(false);
@@ -108,7 +108,7 @@ const ManageUser = () => {
 
   const getRows = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_URL}/admin/users`;
+      const url = `/admin/users`;
       const { data } = await axios.get(url, { withCredentials: true });
       setRows(data);
     } catch (err) {

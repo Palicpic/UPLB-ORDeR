@@ -45,7 +45,7 @@ const IssueDocumentModal = (props) => {
       setAlert(true);
       setAlertMessage("Reason For Rejecting Field cannot be empty!");
     } else {
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/document/issue-document/rejected`, formValues);
+      const { data } = await axios.post(`/document/issue-document/rejected`, formValues);
       if (data.data === "Success") {
         props.getDocRequestList();
         handleSuccessAlert(true, "Document Request Denied!");
@@ -60,7 +60,7 @@ const IssueDocumentModal = (props) => {
       setAlertMessage("File Upload is required!");
     } else {
       //check if contract is deployed
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/has-contract`, { withCredentials: true });
+      const { data } = await axios.get(`/contract/has-contract`, { withCredentials: true });
       formValues.contractAddress = data.length === 0 ? "" : data.address;
       console.log(formValues.contractAddress);
 
@@ -78,7 +78,7 @@ const IssueDocumentModal = (props) => {
           }
         }
 
-        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/contract/issue-document/new`, formData, {
+        const { data } = await axios.post(`/contract/issue-document/new`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

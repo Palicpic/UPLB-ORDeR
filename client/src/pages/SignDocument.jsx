@@ -16,7 +16,7 @@ const SignDocument = () => {
   const getSignRequestList = useCallback(async () => {
     try {
       const userId = user._id;
-      const signListUrl = `${process.env.REACT_APP_API_URL}/sign/request-faculty/${userId}`;
+      const signListUrl = `/sign/request-faculty/${userId}`;
       const { data } = await axios.get(signListUrl, { withCredentials: true });
       setSignRequestList(data);
     } catch (err) {

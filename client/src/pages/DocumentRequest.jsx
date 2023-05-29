@@ -55,7 +55,7 @@ const DocumentRequest = () => {
   const getDocRequestList = useCallback(async () => {
     try {
       const userId = user._id;
-      const docListUrl = `${process.env.REACT_APP_API_URL}/document/request/${userId}`;
+      const docListUrl = `/document/request/${userId}`;
       const { data } = await axios.get(docListUrl, { withCredentials: true });
       setDocRequestList(data);
     } catch (err) {

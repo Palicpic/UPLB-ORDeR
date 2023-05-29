@@ -39,7 +39,7 @@ const SignDocumentModal = (props) => {
       setAlert(true);
       setAlertMessage("Reason For Rejecting Field cannot be empty!");
     } else {
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/sign/sign-document/rejected`, formValues);
+      const { data } = await axios.post(`/sign/sign-document/rejected`, formValues);
       if (data.data === "Success") {
         props.getSignRequestList();
         handleSuccessAlert(true, "Signature Request Denied!");
@@ -50,7 +50,7 @@ const SignDocumentModal = (props) => {
 
   const handleSignDocument = async () => {
     //check if contract is deployed
-    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/contract/has-contract`, { withCredentials: true });
+    const { data } = await axios.get(`/contract/has-contract`, { withCredentials: true });
     formValues.contractAddress = data.length === 0 ? "" : data.address;
     console.log(formValues.contractAddress);
 
@@ -61,7 +61,7 @@ const SignDocumentModal = (props) => {
       try {
         setIsUploading(true);
 
-        await axios.post(`${process.env.REACT_APP_API_URL}/contract/sign-document/new`, formValues);
+        await axios.post(`/contract/sign-document/new`, formValues);
 
         setIsUploading(false);
         props.getSignRequestList();

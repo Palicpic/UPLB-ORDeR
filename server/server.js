@@ -27,6 +27,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static("static"));
 
 app.use(
   cors({
@@ -54,9 +55,8 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, 
   console.log("The connection with mongod is established");
 });
 
-app.use(express.static("static"));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "staic/index.html"));
+  res.sendFile(path.join(__dirname, "static/index.html"));
 });
 
 if (process.env.NODE_ENV === "production") {

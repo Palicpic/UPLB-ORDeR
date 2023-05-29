@@ -50,7 +50,7 @@ const SignatureRequestModal = (props) => {
 
     if (handleErrors()) setAlert(true);
     else {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/sign/find-email/${formValues.recipient}`);
+      const { data } = await axios.get(`/sign/find-email/${formValues.recipient}`);
       if (data.length === 0 || data[0].role !== "Faculty") {
         setAlertMessage("Recipient Faculty Email not found!");
         setAlert(true);
@@ -63,7 +63,7 @@ const SignatureRequestModal = (props) => {
           }
         }
         try {
-          const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/sign/new-request`, formData, {
+          const { data } = await axios.post(`/sign/new-request`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
