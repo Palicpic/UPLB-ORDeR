@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const bodyparser = require("body-parser");
@@ -51,6 +52,11 @@ const mongoURI = process.env.MONGO_URI;
 mongoose.set("strictQuery", false);
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
   console.log("The connection with mongod is established");
+});
+
+app.use(express.static("static"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "staic/index.html"));
 });
 
 if (process.env.NODE_ENV === "production") {
