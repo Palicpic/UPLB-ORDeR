@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "http://uplborder.live/auth/google/callback",
       scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {

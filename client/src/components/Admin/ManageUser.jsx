@@ -92,7 +92,7 @@ const ManageUser = () => {
     setPage(newPage);
   };
 
-  const filteredRows = roleFilter === "All" ? rows : rows.filter((row) => row.status === roleFilter);
+  const filteredRows = roleFilter === "All" ? rows : rows.filter((row) => row.role === roleFilter);
 
   const handleDeleteUser = async () => {
     const { data } = await axios.delete(`/admin/user/delete/${toDeleteData._id}`);

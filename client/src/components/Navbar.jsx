@@ -175,7 +175,7 @@ const Navbar = () => {
             {!user && (
               <div>
                 <Button variant="contained" sx={{ color: "white", border: "2px solid", borderColor: "white", borderRadius: "40px" }} onClick={googleAuth}>
-                  Login with UP Mail
+                  Login with Google
                 </Button>
               </div>
             )}
