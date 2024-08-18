@@ -6,4 +6,3 @@ Ensuring the authenticity of a digital educational document is a must and respon
 
 Keywords: Blockchain, Ethereum, Smart Contract, Security, Authentication, Verification, Educational Document, IPFS, Infura
 
-Read [How To Document](HOWTO.md) for more details.
